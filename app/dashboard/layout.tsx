@@ -56,13 +56,13 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 z-50 h-screen w-[260px] border-r border-[var(--border)] bg-[var(--surface)]/95 backdrop-blur-xl transition-transform duration-300 lg:translate-x-0 ${
+        className={`fixed left-0 top-0 z-50 h-screen w-[260px] border-r border-[var(--border)] bg-[var(--surface)]/95 backdrop-blur-xl transition-transform duration-300 ease-in-out lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         {/* Logo */}
         <div className="flex items-center gap-3 border-b border-[var(--border)] px-6 py-5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 text-sm font-black">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 text-sm font-black shadow-lg shadow-violet-500/25">
             H
           </div>
           <span className="text-lg font-bold tracking-tight bg-gradient-to-r from-[var(--text-primary)] to-[var(--text-secondary)] bg-clip-text text-transparent">
@@ -70,7 +70,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           </span>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="ml-auto lg:hidden text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+            className="ml-auto lg:hidden text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors"
           >
             <X size={20} />
           </button>
@@ -85,7 +85,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         </div>
 
         {/* Navigation */}
-        <nav className="p-3 space-y-4">
+        <nav className="p-3 space-y-1">
           {navSections.map((section) => (
             <div key={section.label}>
               <div className="mb-1 px-3 text-[10px] uppercase tracking-widest text-[var(--text-tertiary)]">
@@ -97,10 +97,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`group mb-1 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
+                    className={`group mb-1 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
                       isActive
-                        ? "bg-violet-500/10 text-[var(--text-primary)] border-l-2 border-violet-500"
-                        : "text-[var(--text-secondary)] hover:bg-[var(--hover-bg)] hover:text-[var(--text-primary)]"
+                        ? "bg-violet-500/10 text-[var(--text-primary)] border-l-2 border-violet-500 shadow-inner shadow-violet-500/5"
+                        : "text-[var(--text-secondary)] hover:bg-[var(--hover-bg)] hover:text-[var(--text-primary)] hover:translate-x-0.5"
                     }`}
                     onClick={() => setSidebarOpen(false)}
                   >
@@ -121,7 +121,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         {/* Sidebar footer */}
         <div className="absolute bottom-0 left-0 right-0 border-t border-[var(--border)] px-6 py-4">
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-xs font-bold text-white">
+            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-xs font-bold text-white shadow-lg shadow-amber-500/20">
               A
             </div>
             <div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import {
   Settings,
   User,
@@ -21,13 +21,20 @@ import {
   Trash2,
   ShoppingBag,
   Plus,
+  Download,
+  Eye,
+  EyeOff,
 } from "lucide-react";
+import { useToast } from "@/components/Toast";
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("profile");
-  const [darkMode, setDarkMode] = useState(true);
+  const [twoFaEnabled, setTwoFaEnabled] = useState(false);
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [pushNotifications, setPushNotifications] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const { toast } = useToast();
 
   const tabs = [
     { id: "profile", label: "Profile", icon: <User size={16} /> },
@@ -36,6 +43,41 @@ export default function SettingsPage() {
     { id: "billing", label: "Billing", icon: <CreditCard size={16} /> },
     { id: "danger", label: "Danger Zone", icon: <Trash2 size={16} /> },
   ];
+
+  const handleSaveProfile = () => {
+    setSaveSuccess(true);
+    toast({
+      title: "Profile Updated",
+      description: "Your profile information has been saved successfully.",
+      variant: "success",
+    });
+    setTimeout(() => setSaveSuccess(false), 2000);
+  };
+
+  const handlePasswordChange = () => {
+    toast({
+      title: "Password Updated",
+      description: "Your password has been changed successfully.",
+      variant: "success",
+    });
+  };
+
+  const handleExportData = () => {
+    toast({
+      title: "Export Started",
+      description: "Your data is being exported. You'll receive an email when it's ready.",
+      variant: "info",
+    });
+  };
+
+  const handleDeleteAccount = () => {
+    toast({
+      title: "Account Deleted",
+      description: "Your account and all associated data have been permanently removed.",
+      variant: "error",
+      duration: 6000,
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -55,7 +97,7 @@ export default function SettingsPage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all ${
+                className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 ${
                   activeTab === tab.id
                     ? "bg-violet-500/10 text-violet-400 shadow-inner shadow-violet-500/10"
                     : "text-[var(--text-secondary)] hover:bg-[var(--hover-bg)] hover:text-[var(--text-primary)]"
@@ -83,7 +125,7 @@ export default function SettingsPage() {
                   <input
                     type="text"
                     defaultValue="Admin User"
-                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all duration-200 focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
                   />
                 </div>
                 <div>
@@ -91,7 +133,7 @@ export default function SettingsPage() {
                   <input
                     type="text"
                     defaultValue="HermesAdmin"
-                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all duration-200 focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
                   />
                 </div>
                 <div className="sm:col-span-2">
@@ -99,7 +141,7 @@ export default function SettingsPage() {
                   <textarea
                     rows={3}
                     defaultValue="E-commerce store administrator managing products, orders, and customer relationships."
-                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20 resize-none"
+                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all duration-200 focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20 resize-none"
                   />
                 </div>
                 <div className="sm:col-span-2">
@@ -113,12 +155,15 @@ export default function SettingsPage() {
                 </div>
               </div>
               <div className="mt-6 flex justify-end gap-3">
-                <button className="rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-6 py-2.5 text-sm font-medium text-[var(--text-secondary)] transition-all hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]">
+                <button className="rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-6 py-2.5 text-sm font-medium text-[var(--text-secondary)] transition-all duration-200 hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]">
                   Reset
                 </button>
-                <button className="rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-violet-500/25 transition-all hover:shadow-xl hover:shadow-violet-500/40 flex items-center gap-2">
+                <button
+                  onClick={handleSaveProfile}
+                  className="rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-violet-500/25 transition-all duration-200 hover:shadow-xl hover:shadow-violet-500/40 flex items-center gap-2"
+                >
                   <Save size={15} />
-                  Save Changes
+                  {saveSuccess ? "✓ Saved!" : "Save Changes"}
                 </button>
               </div>
             </div>
@@ -136,19 +181,43 @@ export default function SettingsPage() {
                 <div className="space-y-4">
                   <div>
                     <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">Current Password</label>
-                    <input type="password" placeholder="••••••••" className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20" />
+                    <div className="relative">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="••••••••"
+                        className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all duration-200 focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20 pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+                      >
+                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                    </div>
                   </div>
                   <div>
                     <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">New Password</label>
-                    <input type="password" placeholder="••••••••" className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20" />
+                    <input
+                      type="password"
+                      placeholder="••••••••"
+                      className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all duration-200 focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+                    />
                   </div>
                   <div>
                     <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">Confirm New Password</label>
-                    <input type="password" placeholder="••••••••" className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20" />
+                    <input
+                      type="password"
+                      placeholder="••••••••"
+                      className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all duration-200 focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+                    />
                   </div>
                 </div>
                 <div className="mt-6 flex justify-end">
-                  <button className="rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-violet-500/25 transition-all hover:shadow-xl hover:shadow-violet-500/40 flex items-center gap-2">
+                  <button
+                    onClick={handlePasswordChange}
+                    className="rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-violet-500/25 transition-all duration-200 hover:shadow-xl hover:shadow-violet-500/40 flex items-center gap-2"
+                  >
                     <Lock size={15} />
                     Update Password
                   </button>
@@ -163,13 +232,22 @@ export default function SettingsPage() {
                     <p className="text-xs text-[var(--text-tertiary)] mt-1">Add an extra layer of security to your account</p>
                   </div>
                   <button
-                    onClick={() => setDarkMode(!darkMode)}
-                    className={`relative flex h-6 w-12 items-center rounded-full border transition-colors ${
-                      darkMode ? "border-violet-500 bg-violet-500" : "border-[var(--border)] bg-[var(--hover-bg)]"
+                    onClick={() => {
+                      setTwoFaEnabled(!twoFaEnabled);
+                      toast({
+                        title: twoFaEnabled ? "2FA Disabled" : "2FA Enabled",
+                        description: twoFaEnabled
+                          ? "Two-factor authentication has been turned off."
+                          : "Two-factor authentication has been turned on for added security.",
+                        variant: twoFaEnabled ? "warning" : "success",
+                      });
+                    }}
+                    className={`relative flex h-6 w-12 items-center rounded-full border transition-colors duration-300 ${
+                      twoFaEnabled ? "border-violet-500 bg-violet-500" : "border-[var(--border)] bg-[var(--hover-bg)]"
                     }`}
                   >
                     <div
-                      className={`absolute h-4 w-4 rounded-full bg-white shadow-md transition-transform ${darkMode ? "translate-x-6" : "translate-x-0.5"}`}
+                      className={`absolute h-4 w-4 rounded-full bg-white shadow-md transition-transform duration-300 ${twoFaEnabled ? "translate-x-6" : "translate-x-0.5"}`}
                     />
                   </button>
                 </div>
@@ -184,7 +262,7 @@ export default function SettingsPage() {
                     { icon: <Github size={16} />, label: "GitHub", value: "Connected", connected: true },
                     { icon: <Globe size={16} />, label: "Google", value: "Not connected", connected: false },
                   ].map((item, i) => (
-                    <div key={i} className="flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] p-4">
+                    <div key={i} className="flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] p-4 transition-colors duration-200 hover:border-[var(--text-tertiary)]/20">
                       <div className="flex items-center gap-3">
                         <span className="text-[var(--text-tertiary)]">{item.icon}</span>
                         <div>
@@ -193,9 +271,19 @@ export default function SettingsPage() {
                         </div>
                       </div>
                       {item.connected ? (
-                        <button className="rounded-lg border border-red-500/30 px-3 py-1.5 text-xs font-semibold text-red-400 hover:bg-red-500/10 transition-all">Disconnect</button>
+                        <button
+                          onClick={() => toast({ title: `${item.label} Disconnected`, variant: "warning" })}
+                          className="rounded-lg border border-red-500/30 px-3 py-1.5 text-xs font-semibold text-red-400 hover:bg-red-500/10 transition-all duration-200"
+                        >
+                          Disconnect
+                        </button>
                       ) : (
-                        <button className="rounded-lg border border-violet-500/30 px-3 py-1.5 text-xs font-semibold text-violet-400 hover:bg-violet-500/10 transition-all">Connect</button>
+                        <button
+                          onClick={() => toast({ title: `${item.label} Connected`, variant: "success" })}
+                          className="rounded-lg border border-violet-500/30 px-3 py-1.5 text-xs font-semibold text-violet-400 hover:bg-violet-500/10 transition-all duration-200"
+                        >
+                          Connect
+                        </button>
                       )}
                     </div>
                   ))}
@@ -213,19 +301,25 @@ export default function SettingsPage() {
                   { label: "Email Notifications", desc: "Receive updates via email", checked: emailNotifications, onChange: setEmailNotifications },
                   { label: "Push Notifications", desc: "Get notified in the browser", checked: pushNotifications, onChange: setPushNotifications },
                 ].map((n) => (
-                  <div key={n.label} className="mb-4 flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] p-4">
+                  <div key={n.label} className="mb-4 flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] p-4 transition-colors duration-200 hover:border-[var(--text-tertiary)]/20">
                     <div>
                       <p className="text-sm font-medium text-[var(--text-primary)]">{n.label}</p>
                       <p className="text-xs text-[var(--text-tertiary)]">{n.desc}</p>
                     </div>
                     <button
-                      onClick={() => n.onChange(!n.checked)}
-                      className={`relative flex h-6 w-12 items-center rounded-full border transition-colors ${
+                      onClick={() => {
+                        n.onChange(!n.checked);
+                        toast({
+                          title: n.checked ? `${n.label} Off` : `${n.label} On`,
+                          variant: n.checked ? "warning" : "success",
+                        });
+                      }}
+                      className={`relative flex h-6 w-12 items-center rounded-full border transition-colors duration-300 ${
                         n.checked ? "border-violet-500 bg-violet-500" : "border-[var(--border)] bg-[var(--hover-bg-strong)]"
                       }`}
                     >
                       <div
-                        className={`absolute h-4 w-4 rounded-full bg-white shadow-md transition-transform ${n.checked ? "translate-x-6" : "translate-x-0.5"}`}
+                        className={`absolute h-4 w-4 rounded-full bg-white shadow-md transition-transform duration-300 ${n.checked ? "translate-x-6" : "translate-x-0.5"}`}
                       />
                     </button>
                   </div>
@@ -240,7 +334,7 @@ export default function SettingsPage() {
                   { title: "Product Low Stock", desc: "USB-C Hub is running low (3 remaining)", time: "15 min ago", icon: <Bell size={16} /> },
                   { title: "Monthly Report Ready", desc: "April sales report is available for download", time: "1 hr ago", icon: <Mail size={16} /> },
                 ].map((n, i) => (
-                  <div key={i} className="flex items-start gap-3 rounded-lg p-3 transition-colors hover:bg-white/[0.02]">
+                  <div key={i} className="flex items-start gap-3 rounded-lg p-3 transition-colors duration-200 hover:bg-white/[0.02]">
                     <span className="mt-0.5 shrink-0 text-[var(--text-tertiary)]">{n.icon}</span>
                     <div>
                       <p className="text-sm text-[var(--text-primary)]">{n.title}</p>
@@ -262,7 +356,7 @@ export default function SettingsPage() {
                     <h3 className="text-sm font-semibold text-[var(--text-primary)]">Current Plan</h3>
                     <p className="text-xs text-[var(--text-tertiary)] mt-1">Pro Plan — $29/month</p>
                   </div>
-                  <button className="rounded-xl border border-violet-500/30 px-4 py-2 text-xs font-semibold text-violet-400 hover:bg-violet-500/10 transition-all">
+                  <button className="rounded-xl border border-violet-500/30 px-4 py-2 text-xs font-semibold text-violet-400 hover:bg-violet-500/10 transition-all duration-200">
                     Manage Plan
                   </button>
                 </div>
@@ -291,7 +385,7 @@ export default function SettingsPage() {
                   </div>
                   <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-400">Default</span>
                 </div>
-                <button className="mt-3 flex items-center gap-2 text-sm text-[var(--text-tertiary)] hover:text-violet-400 transition-colors">
+                <button className="mt-3 flex items-center gap-2 text-sm text-[var(--text-tertiary)] hover:text-violet-400 transition-colors duration-200">
                   <Plus size={14} /> Add Payment Method
                 </button>
               </div>
@@ -305,7 +399,7 @@ export default function SettingsPage() {
                     { month: "February 2025", amount: "$29.00", status: "Paid" },
                     { month: "January 2025", amount: "$29.00", status: "Paid" },
                   ].map((b, i) => (
-                    <div key={i} className="flex items-center justify-between rounded-lg p-3 transition-colors hover:bg-white/[0.02]">
+                    <div key={i} className="flex items-center justify-between rounded-lg p-3 transition-colors duration-200 hover:bg-white/[0.02]">
                       <div>
                         <p className="text-sm font-medium text-[var(--text-primary)]">{b.month}</p>
                         <p className="text-xs text-[var(--text-tertiary)]">Pro Plan</p>
@@ -325,8 +419,11 @@ export default function SettingsPage() {
                 <h3 className="text-sm font-semibold text-red-400 mb-2">Delete Account</h3>
                 <p className="text-xs text-[var(--text-tertiary)] mb-4">This action is irreversible. All data, orders, and settings will be permanently removed.</p>
                 <div className="flex gap-3">
-                  <input type="text" placeholder="Type account name to confirm" className="flex-1 rounded-xl border border-red-500/30 bg-[var(--hover-bg)] px-4 py-2.5 text-sm text-red-400 placeholder:text-red-400/40 outline-none focus:ring-1 focus:ring-red-500/20" />
-                  <button className="rounded-xl bg-gradient-to-r from-red-500 to-rose-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-red-500/25 hover:shadow-xl hover:shadow-red-500/40 transition-all flex items-center gap-2">
+                  <input type="text" placeholder="Type account name to confirm" className="flex-1 rounded-xl border border-red-500/30 bg-[var(--hover-bg)] px-4 py-2.5 text-sm text-red-400 placeholder:text-red-400/40 outline-none focus:ring-1 focus:ring-red-500/20 transition-all duration-200" />
+                  <button
+                    onClick={handleDeleteAccount}
+                    className="rounded-xl bg-gradient-to-r from-red-500 to-rose-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-red-500/25 hover:shadow-xl hover:shadow-red-500/40 transition-all duration-200 flex items-center gap-2"
+                  >
                     <Trash2 size={15} />
                     Delete Account
                   </button>
@@ -336,8 +433,11 @@ export default function SettingsPage() {
               <div className="rounded-2xl border border-amber-500/20 bg-amber-500/[0.03] p-6 backdrop-blur-xl">
                 <h3 className="text-sm font-semibold text-amber-400 mb-2">Export & Download Data</h3>
                 <p className="text-xs text-[var(--text-tertiary)] mb-4">Download a copy of all your data including orders, customers, and settings.</p>
-                <button className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-6 py-2.5 text-sm font-semibold text-amber-400 hover:bg-amber-500/20 transition-all flex items-center gap-2">
-                  <DownloadIcon />
+                <button
+                  onClick={handleExportData}
+                  className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-6 py-2.5 text-sm font-semibold text-amber-400 hover:bg-amber-500/20 transition-all duration-200 flex items-center gap-2"
+                >
+                  <Download size={15} />
                   Export All Data
                 </button>
               </div>
@@ -346,16 +446,5 @@ export default function SettingsPage() {
         </div>
       </div>
     </div>
-  );
-}
-
-// ─── Download SVG Icon ───────────────────────────────
-function DownloadIcon() {
-  return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-      <polyline points="7 10 12 15 17 10" />
-      <line x1="12" y1="15" x2="12" y2="3" />
-    </svg>
   );
 }
