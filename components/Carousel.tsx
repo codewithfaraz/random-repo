@@ -12,7 +12,7 @@ interface CarouselProps {
   arrows?: boolean;
   /** Show dot indicators? Default: true */
   dots?: boolean;
-  /** Arrow class name for positioning */
+  /** CSS class on the viewport wrapper */
   className?: string;
 }
 
@@ -28,8 +28,7 @@ export function Carousel({
   const [nextBtnDisabled, setNextBtnDisabled] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
-
-  const [autoplayInterval, setAutoplayInterval] = useState<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
@@ -56,42 +55,46 @@ export function Carousel({
 
   // Autoplay
   useEffect(() => {
-    if (autoplayInterval) return;
-    const interval = setInterval(() => {
+    if (timerRef.current) return;
+    timerRef.current = setInterval(() => {
       if (emblaApi) emblaApi.scrollNext();
     }, 5000);
-    // @ts-ignore
-    setAutoplayInterval(interval);
-    return () => clearInterval(interval);
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+      timerRef.current = null;
+    };
   }, [emblaApi]);
 
-  // Pause autoplay on hover/focus
+  // Pause autoplay on hover
   const handleMouseEnter = useCallback(() => {
-    if (autoplayInterval) {
-      clearInterval(autoplayInterval);
-      setAutoplayInterval(null);
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
     }
-  }, [autoplayInterval]);
+  }, []);
 
-  // Restart autoplay on mouse leave
   const handleMouseLeave = useCallback(() => {
-    if (!autoplayInterval && emblaApi) {
-      const interval = setInterval(() => emblaApi.scrollNext(), 5000);
-      // @ts-ignore
-      setAutoplayInterval(interval);
+    if (!timerRef.current && emblaApi) {
+      timerRef.current = setInterval(() => emblaApi.scrollNext(), 5000);
     }
-  }, [autoplayInterval, emblaApi]);
+  }, [emblaApi]);
 
   return (
     <div
       className={`relative overflow-hidden ${className}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onFocus={handleMouseEnter}
-      onBlur={handleMouseLeave}
     >
-      <div ref={emblaRef} className="flex">
-        {children}
+      {/* Embla viewport — ref goes here */}
+      <div ref={emblaRef} className="overflow-hidden">
+        {/* Embla container */}
+        <div className="flex">
+          {React.Children.map(children, (child, index) => (
+            <div key={index} className="min-w-0 flex-[0_0_100%]">
+              {child}
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Navigation Arrows */}
