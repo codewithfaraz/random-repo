@@ -80,7 +80,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 stagger-children">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -171,7 +171,7 @@ export default function SettingsPage() {
 
           {/* ─── Account Tab ─────────────────────────── */}
           {activeTab === "account" && (
-            <div className="space-y-6">
+            <div className="space-y-6 stagger-children">
               {/* Change Password */}
               <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)]/[0.03] p-6 backdrop-blur-xl">
                 <h2 className="mb-6 flex items-center gap-2 text-lg font-bold tracking-tight text-[var(--text-primary)]">
@@ -247,7 +247,7 @@ export default function SettingsPage() {
                     }`}
                   >
                     <div
-                      className={`absolute h-4 w-4 rounded-full bg-white shadow-md transition-transform duration-300 ${twoFaEnabled ? "translate-x-6" : "translate-x-0.5"}`}
+                      className={`absolute h-4 w-4 rounded-full bg-[var(--text-primary)] shadow-md transition-transform duration-300 ${twoFaEnabled ? "translate-x-6" : "translate-x-0.5"}`}
                     />
                   </button>
                 </div>
@@ -294,7 +294,7 @@ export default function SettingsPage() {
 
           {/* ─── Notifications Tab ─────────────────── */}
           {activeTab === "notifications" && (
-            <div className="space-y-6">
+            <div className="space-y-6 stagger-children">
               <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)]/[0.03] p-6 backdrop-blur-xl">
                 <h3 className="mb-4 text-sm font-semibold text-[var(--text-primary)]">Notification Preferences</h3>
                 {[
@@ -319,7 +319,7 @@ export default function SettingsPage() {
                       }`}
                     >
                       <div
-                        className={`absolute h-4 w-4 rounded-full bg-white shadow-md transition-transform duration-300 ${n.checked ? "translate-x-6" : "translate-x-0.5"}`}
+                        className={`absolute h-4 w-4 rounded-full bg-[var(--text-primary)] shadow-md transition-transform duration-300 ${n.checked ? "translate-x-6" : "translate-x-0.5"}`}
                       />
                     </button>
                   </div>
@@ -349,7 +349,7 @@ export default function SettingsPage() {
 
           {/* ─── Billing Tab ────────────────────────── */}
           {activeTab === "billing" && (
-            <div className="space-y-6">
+            <div className="space-y-6 stagger-children">
               <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)]/[0.03] p-6 backdrop-blur-xl">
                 <div className="flex items-center justify-between">
                   <div>
@@ -414,7 +414,7 @@ export default function SettingsPage() {
 
           {/* ─── Danger Zone Tab ─────────────────────── */}
           {activeTab === "danger" && (
-            <div className="space-y-6">
+            <div className="space-y-6 stagger-children">
               <div className="rounded-2xl border border-red-500/20 bg-red-500/[0.03] p-6 backdrop-blur-xl">
                 <h3 className="text-sm font-semibold text-red-400 mb-2">Delete Account</h3>
                 <p className="text-xs text-[var(--text-tertiary)] mb-4">This action is irreversible. All data, orders, and settings will be permanently removed.</p>

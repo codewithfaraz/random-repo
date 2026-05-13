@@ -101,7 +101,7 @@ export default function RevenuePage() {
   const avgGrowth = data.reduce((s, d) => s + (d as any).growth, 0) / data.length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 stagger-children">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

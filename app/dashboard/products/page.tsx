@@ -63,7 +63,7 @@ function ProductCard({ product, onAddToCart }: { product: typeof allProducts[0];
           <div className="absolute inset-0 flex items-center justify-center gap-3 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity">
             <button
               onClick={() => setIsWishlisted(!isWishlisted)}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-[var(--text-primary)] hover:bg-white/40 transition-all"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--surface)]/95 backdrop-blur-xl text-[var(--text-primary)] hover:bg-[var(--hover-bg-strong)] transition-all"
               aria-label="Add to wishlist"
             >
               <Heart size={18} className={isWishlisted ? "fill-red-500 text-red-500" : ""} />
@@ -443,7 +443,7 @@ export default function ProductsPage() {
           onClick={() => setCartSlideOpen(false)}
         >
           <div
-            className="fixed right-0 top-0 h-full w-full max-w-md bg-[var(--surface)] shadow-2xl shadow-black/40 transition-transform"
+            className="fixed right-0 top-0 h-full w-full max-w-md bg-[var(--surface)] shadow-2xl shadow-black/40 transition-all duration-300"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}

@@ -125,7 +125,7 @@ function ActionMenu({
 }) {
   return (
     <div
-      className="absolute right-0 top-2 z-50 w-48 rounded-xl border border-white/10 bg-[#161625] p-1 shadow-2xl shadow-black/60 backdrop-blur-xl"
+      className="absolute right-0 top-2 z-50 w-48 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-1 shadow-2xl shadow-black/60 backdrop-blur-xl"
       role="menu"
       onMouseDown={(e) => e.preventDefault()}
     >
