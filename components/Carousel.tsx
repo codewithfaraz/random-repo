@@ -103,7 +103,7 @@ export function Carousel({
           <button
             onClick={scrollPrev}
             disabled={prevBtnDisabled}
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-[var(--text-primary)] transition-all hover:bg-violet-500/50 disabled:opacity-30 disabled:cursor-not-allowed"
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-[var(--text-primary)] transition-all hover:bg-[var(--accent)]/50 disabled:opacity-30 disabled:cursor-not-allowed"
             aria-label="Previous"
           >
             <ChevronLeft size={20} />
@@ -111,7 +111,7 @@ export function Carousel({
           <button
             onClick={scrollNext}
             disabled={nextBtnDisabled}
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-[var(--text-primary)] transition-all hover:bg-violet-500/50 disabled:opacity-30 disabled:cursor-not-allowed"
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-[var(--text-primary)] transition-all hover:bg-[var(--accent)]/50 disabled:opacity-30 disabled:cursor-not-allowed"
             aria-label="Next"
           >
             <ChevronRight size={20} />

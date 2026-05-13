@@ -50,7 +50,7 @@ function ProductCard({ product, onAddToCart }: { product: typeof allProducts[0];
 
   return (
     <div
-      className="group relative flex flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] transition-all duration-500 hover:-translate-y-1 hover:border-violet-500/30 hover:shadow-2xl hover:shadow-violet-500/5"
+      className="group relative flex flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] transition-all duration-500 hover:-translate-y-1 hover:border-[var(--accent)]/30 hover:shadow-2xl hover:shadow-[var(--accent)]/5"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -66,11 +66,11 @@ function ProductCard({ product, onAddToCart }: { product: typeof allProducts[0];
               className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--surface)]/95 backdrop-blur-xl text-[var(--text-primary)] hover:bg-[var(--hover-bg-strong)] transition-all"
               aria-label="Add to wishlist"
             >
-              <Heart size={18} className={isWishlisted ? "fill-red-500 text-red-500" : ""} />
+              <Heart size={18} className={isWishlisted ? "fill-[var(--text-danger)] text-[var(--text-danger)]" : ""} />
             </button>
             <button
               onClick={() => onAddToCart(product)}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-violet-500/80 backdrop-blur-sm text-[var(--text-primary)] hover:bg-violet-500 transition-all"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent)]/80 backdrop-blur-sm text-[var(--text-primary)] hover:bg-[var(--accent)] transition-all"
               aria-label="Add to cart"
             >
               <ShoppingBag size={18} />
@@ -95,7 +95,7 @@ function ProductCard({ product, onAddToCart }: { product: typeof allProducts[0];
       <div className="flex flex-1 flex-col gap-2 p-5">
         <Link
           href={`/dashboard/products/${product.id}`}
-          className="text-sm font-semibold text-[var(--text-primary)] hover:text-violet-400 line-clamp-2"
+          className="text-sm font-semibold text-[var(--text-primary)] hover:text-[var(--accent)] line-clamp-2"
         >
           {product.name}
         </Link>
@@ -107,7 +107,7 @@ function ProductCard({ product, onAddToCart }: { product: typeof allProducts[0];
               <Star
                 key={s}
                 size={11}
-                className={s < Math.floor(product.rating) ? "text-amber-400 fill-amber-400" : "text-gray-600"}
+                className={s < Math.floor(product.rating) ? "text-[var(--text-warning)] fill-[var(--warning)]" : "text-[var(--text-tertiary)]"}
               />
             ))}
           </div>
@@ -118,7 +118,7 @@ function ProductCard({ product, onAddToCart }: { product: typeof allProducts[0];
 
         {/* Price & Category */}
         <div className="mt-auto flex items-center justify-between">
-          <span className="text-lg font-bold tracking-tight text-violet-400">${product.price.toFixed(2)}</span>
+          <span className="text-lg font-bold tracking-tight text-[var(--accent)]">${product.price.toFixed(2)}</span>
           <span className="text-[11px] text-[var(--text-tertiary)] capitalize">{product.category}</span>
         </div>
 
@@ -128,8 +128,8 @@ function ProductCard({ product, onAddToCart }: { product: typeof allProducts[0];
           disabled={!product.inStock}
           className={`mt-3 w-full rounded-xl py-2.5 text-sm font-semibold transition-all ${
             product.inStock
-              ? "bg-violet-500 text-[var(--text-primary)] hover:bg-violet-600 shadow-lg shadow-violet-500/25"
-              : "bg-gray-700 text-gray-400 cursor-not-allowed"
+              ? "bg-[var(--accent)] text-[var(--text-primary)] hover:bg-[var(--accent)] shadow-lg shadow-[var(--accent)]/25"
+              : "bg-[var(--neutral-bg)] text-[var(--text-tertiary)] cursor-not-allowed"
           }`}
         >
           {product.inStock ? "Add to Cart" : "Out of Stock"}
@@ -253,7 +253,7 @@ export default function ProductsPage() {
         <Carousel opts={{ loop: true, align: "start", slidesToScroll: 1 }} arrows dots>
           {featuredProducts.map((product) => (
             <div key={product.id} className="min-w-[200px] max-w-[260px] px-2">
-              <div className="flex flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] transition-all duration-300 hover:border-violet-500/30 hover:shadow-xl hover:shadow-violet-500/5 group cursor-pointer">
+              <div className="flex flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] transition-all duration-300 hover:border-[var(--accent)]/30 hover:shadow-xl hover:shadow-[var(--accent)]/5 group cursor-pointer">
                 <div className="aspect-square flex items-center justify-center bg-[var(--hover-bg)]">
                   <span className="text-7xl transition-transform duration-500 group-hover:scale-110">{product.image}</span>
                 </div>
@@ -261,11 +261,11 @@ export default function ProductsPage() {
                   <h3 className="text-sm font-semibold text-[var(--text-primary)] line-clamp-1">{product.name}</h3>
                   <div className="mt-2 flex items-center gap-1">
                     {[...Array(5)].map((_, s) => (
-                      <Star key={s} size={12} className={s < Math.floor(product.rating) ? "text-amber-400 fill-amber-400" : "text-gray-600"} />
+                      <Star key={s} size={12} className={s < Math.floor(product.rating) ? "text-[var(--text-warning)] fill-[var(--warning)]" : "text-[var(--text-tertiary)]"} />
                     ))}
                     <span className="ml-1 text-[11px] text-[var(--text-tertiary)]">{product.rating}</span>
                   </div>
-                  <p className="mt-1 text-lg font-bold text-violet-400">${product.price.toFixed(2)}</p>
+                  <p className="mt-1 text-lg font-bold text-[var(--accent)]">${product.price.toFixed(2)}</p>
                 </div>
               </div>
             </div>
@@ -279,7 +279,7 @@ export default function ProductsPage() {
       <section className="pb-20">
         <div className="mx-auto max-w-7xl px-6">
           <div className="mb-8 flex items-center gap-3">
-            <span className="inline-flex items-center gap-2 rounded-full bg-red-500/10 px-3 py-1.5 text-xs font-bold uppercase text-red-400">
+            <span className="inline-flex items-center gap-2 rounded-full bg-[var(--danger-bg)] px-3 py-1.5 text-xs font-bold uppercase text-[var(--text-danger)]">
               🔥 Flash Sale
             </span>
             <span className="text-sm text-[var(--text-tertiary)]">Ends in 3h 24m 18s</span>
@@ -288,21 +288,21 @@ export default function ProductsPage() {
           <Carousel opts={{ loop: true, align: "start", slidesToScroll: 1 }} arrows dots>
             {flashSales.map((item) => (
               <div key={item.id} className="min-w-[220px] max-w-[280px] px-2">
-                <div className="flex flex-col overflow-hidden rounded-2xl border border-red-500/20 bg-[var(--surface)] transition-all duration-300 hover:shadow-2xl hover:shadow-red-500/5">
-                  <div className="relative aspect-square flex items-center justify-center bg-red-500/5">
+                <div className="flex flex-col overflow-hidden rounded-2xl border border-[var(--danger-border)] bg-[var(--surface)] transition-all duration-300 hover:shadow-2xl hover:shadow-red-500/5">
+                  <div className="relative aspect-square flex items-center justify-center bg-[var(--danger-bg)]">
                     <span className="text-7xl">{item.image}</span>
-                    <span className="absolute top-3 right-3 rounded-full bg-gradient-to-br from-red-500 to-rose-600 px-2.5 py-1 text-[10px] font-black text-[var(--text-primary)]">
+                    <span className="absolute top-3 right-3 rounded-full bg-gradient-to-br from-[var(--danger)] to-[var(--danger-hover)] px-2.5 py-1 text-[10px] font-black text-[var(--text-primary)]">
                       {item.discount}
                     </span>
                   </div>
                   <div className="p-5">
                     <h3 className="text-sm font-semibold text-[var(--text-primary)]">{item.name}</h3>
                     <div className="mt-2 flex items-baseline gap-2">
-                      <span className="text-xl font-bold text-red-400">${item.sale.toFixed(2)}</span>
+                      <span className="text-xl font-bold text-[var(--text-danger)]">${item.sale.toFixed(2)}</span>
                       <span className="text-sm text-[var(--text-tertiary)] line-through">${item.original.toFixed(2)}</span>
                     </div>
                     <button
-                      className="mt-3 w-full rounded-xl bg-gradient-to-r from-red-500 to-rose-600 py-2.5 text-sm font-bold text-[var(--text-primary)] shadow-lg shadow-red-500/25 transition-all hover:shadow-xl hover:shadow-red-500/40"
+                      className="mt-3 w-full rounded-xl bg-gradient-to-r from-[var(--danger)] to-[var(--danger-hover)] py-2.5 text-sm font-bold text-[var(--text-primary)] shadow-lg shadow-red-500/25 transition-all hover:shadow-xl hover:shadow-red-500/40"
                       onClick={() => alert(`Added ${item.name} to cart!`)}
                     >
                       Grab Deal!
@@ -338,8 +338,8 @@ export default function ProductsPage() {
                 onClick={() => setActiveCategory(cat)}
                 className={`rounded-full border px-4 py-1.5 text-xs font-semibold transition-all ${
                   activeCategory === cat
-                    ? "border-violet-500 bg-violet-500 text-[var(--text-primary)] shadow-lg shadow-violet-500/25"
-                    : "border-[var(--border)] bg-[var(--hover-bg)] text-[var(--text-secondary)] hover:border-violet-500/50 hover:text-[var(--text-primary)]"
+                    ? "border-violet-500 bg-[var(--accent)] text-[var(--text-primary)] shadow-lg shadow-[var(--accent)]/25"
+                    : "border-[var(--border)] bg-[var(--hover-bg)] text-[var(--text-secondary)] hover:border-[var(--accent)]/50 hover:text-[var(--text-primary)]"
                 }`}
               >
                 {cat}
@@ -356,13 +356,13 @@ export default function ProductsPage() {
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-48 rounded-full border border-[var(--border)] bg-[var(--hover-bg)] py-1.5 pl-9 pr-4 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+                className="w-48 rounded-full border border-[var(--border)] bg-[var(--hover-bg)] py-1.5 pl-9 pr-4 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none focus:border-[var(--accent)]/50 focus:ring-1 focus:ring-violet-500/20"
               />
             </div>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="rounded-full border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-1.5 text-sm text-[var(--text-secondary)] outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+              className="rounded-full border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-1.5 text-sm text-[var(--text-secondary)] outline-none focus:border-[var(--accent)]/50 focus:ring-1 focus:ring-violet-500/20"
             >
               {sortOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -379,7 +379,7 @@ export default function ProductsPage() {
               <SlidersHorizontal size={14} className="text-[var(--text-tertiary)]" />
               <span className="text-sm text-[var(--text-tertiary)]">
                 {activeCategory !== "All" && (
-                  <span className="mr-1 inline-flex items-center gap-1 rounded-full bg-violet-500/10 px-2.5 py-0.5 text-xs font-medium text-violet-400">
+                  <span className="mr-1 inline-flex items-center gap-1 rounded-full bg-[var(--accent)]/10 px-2.5 py-0.5 text-xs font-medium text-[var(--accent)]">
                     {activeCategory}
                     <button onClick={() => setActiveCategory("All")} aria-label="Clear category">
                       <X size={10} />
@@ -387,7 +387,7 @@ export default function ProductsPage() {
                   </span>
                 )}
                 {searchQuery && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-2.5 py-0.5 text-xs font-medium text-blue-400">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[var(--info-bg)] px-2.5 py-0.5 text-xs font-medium text-[var(--text-info)]">
                     "{searchQuery}"
                     <button onClick={() => setSearchQuery("")} aria-label="Clear search">
                       <X size={10} />
@@ -400,7 +400,7 @@ export default function ProductsPage() {
                     setSearchQuery("");
                     setSortBy("featured");
                   }}
-                  className="ml-2 text-xs font-medium text-violet-400 hover:underline"
+                  className="ml-2 text-xs font-medium text-[var(--accent)] hover:underline"
                 >
                   Clear All ✕
                 </button>
@@ -426,7 +426,7 @@ export default function ProductsPage() {
                 setActiveCategory("All");
                 setSearchQuery("");
               }}
-              className="mt-4 rounded-full border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all"
+              className="mt-4 rounded-full border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all hover:border-[var(--accent)]/50"
             >
               Clear Filters
             </button>
@@ -439,11 +439,11 @@ export default function ProductsPage() {
           ═══════════════════════════════════════════ */}
       {cartSlideOpen && (
         <div
-          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm lg:left-[260px]"
+          className="fixed inset-0 z-50 bg-[var(--modal-overlay)] backdrop-blur-sm lg:left-[260px]"
           onClick={() => setCartSlideOpen(false)}
         >
           <div
-            className="fixed right-0 top-0 h-full w-full max-w-md bg-[var(--surface)] shadow-2xl shadow-black/40 transition-all duration-300"
+            className="fixed right-0 top-0 h-full w-full max-w-md bg-[var(--surface)] shadow-2xl shadow-[var(--shadow-color)] transition-all duration-300"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
@@ -474,7 +474,7 @@ export default function ProductsPage() {
                       <span className="text-3xl">{item.image}</span>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold text-[var(--text-primary)] truncate">{item.name}</p>
-                        <p className="text-sm font-bold text-violet-400">
+                        <p className="text-sm font-bold text-[var(--accent)]">
                           ${(item.price * qty).toFixed(2)}
                         </p>
                       </div>
@@ -482,7 +482,7 @@ export default function ProductsPage() {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => updateQuantity(item.id, -1)}
-                          className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--border)] text-[var(--text-secondary)] hover:border-violet-500/50 hover:text-violet-400"
+                          className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--accent)]/50 hover:text-[var(--accent)]"
                         >
                           <Minus size={12} />
                         </button>
@@ -491,7 +491,7 @@ export default function ProductsPage() {
                         </span>
                         <button
                           onClick={() => updateQuantity(item.id, 1)}
-                          className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--border)] text-[var(--text-secondary)] hover:border-violet-500/50 hover:text-violet-400"
+                          className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--accent)]/50 hover:text-[var(--accent)]"
                         >
                           <Plus size={12} />
                         </button>
@@ -511,13 +511,13 @@ export default function ProductsPage() {
                 </div>
                 <div className="mb-2 flex items-center justify-between text-sm">
                   <span className="text-[var(--text-tertiary)]">Shipping</span>
-                  <span className="text-emerald-400">Free</span>
+                  <span className="text-[var(--text-success)]">Free</span>
                 </div>
                 <div className="mb-4 flex items-center justify-between border-t border-[var(--border)] pt-4">
                   <span className="text-base font-bold text-[var(--text-primary)]">Total</span>
-                  <span className="text-xl font-black text-violet-400">${cartTotal.toFixed(2)}</span>
+                  <span className="text-xl font-black text-[var(--accent)]">${cartTotal.toFixed(2)}</span>
                 </div>
-                <button className="w-full rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 py-3.5 text-sm font-bold text-[var(--text-primary)] shadow-lg shadow-violet-500/25 transition-all hover:shadow-xl hover:shadow-violet-500/40">
+                <button className="w-full rounded-xl bg-gradient-to-r from-[var(--accent)] to-[var(--accent-hover)] py-3.5 text-sm font-bold text-[var(--text-primary)] shadow-lg shadow-[var(--accent)]/25 transition-all hover:shadow-xl hover:shadow-[var(--accent)]/40">
                   Checkout →
                 </button>
               </div>

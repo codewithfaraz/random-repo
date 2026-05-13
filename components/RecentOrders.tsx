@@ -87,25 +87,25 @@ const initialOrders: Order[] = [
 const statusConfig = {
   completed: {
     label: "Completed",
-    color: "text-emerald-400",
+    color: "text-[var(--text-success)]",
     bg: "bg-emerald-400/10",
     icon: CheckCircle2,
   },
   processing: {
     label: "Processing",
-    color: "text-blue-400",
+    color: "text-[var(--text-info)]",
     bg: "bg-blue-400/10",
     icon: Clock,
   },
   pending: {
     label: "Pending",
-    color: "text-amber-400",
+    color: "text-[var(--text-warning)]",
     bg: "bg-amber-400/10",
     icon: Clock,
   },
   cancelled: {
     label: "Cancelled",
-    color: "text-red-400",
+    color: "text-[var(--text-danger)]",
     bg: "bg-red-400/10",
     icon: XCircle,
   },
@@ -125,7 +125,7 @@ function ActionMenu({
 }) {
   return (
     <div
-      className="absolute right-0 top-2 z-50 w-48 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-1 shadow-2xl shadow-black/60 backdrop-blur-xl"
+      className="absolute right-0 top-2 z-50 w-48 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-1 shadow-2xl shadow-[var(--shadow-color)] backdrop-blur-xl"
       role="menu"
       onMouseDown={(e) => e.preventDefault()}
     >
@@ -137,7 +137,7 @@ function ActionMenu({
         className="flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-sm text-[var(--text-secondary)] transition-all hover:bg-[var(--hover-bg)] hover:text-[var(--text-primary)] focus:bg-[var(--hover-bg)] focus:outline-none"
         role="menuitem"
       >
-        <span className="text-blue-400">✏️</span>
+        <span className="text-[var(--text-info)]">✏️</span>
         <span>Edit Order</span>
       </button>
       <button
@@ -145,7 +145,7 @@ function ActionMenu({
           onDelete(orderId);
           onClose();
         }}
-        className="flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-sm text-red-400/80 transition-all hover:bg-red-500/10 hover:text-red-400 focus:bg-red-500/10 focus:outline-none"
+        className="flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-sm text-[var(--text-danger)]/80 transition-all hover:bg-[var(--danger-bg)] hover:text-[var(--text-danger)] focus:bg-[var(--danger-bg)] focus:outline-none"
         role="menuitem"
       >
         <span>🗑️</span>
@@ -222,10 +222,10 @@ export function RecentOrders() {
           <input
             type="text"
             placeholder="Search orders..."
-            className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] py-2.5 pl-10 pr-4 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+            className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] py-2.5 pl-10 pr-4 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all focus:border-[var(--accent)]/50 focus:ring-1 focus:ring-violet-500/20"
           />
         </div>
-        <select className="rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-2.5 text-sm text-[var(--text-secondary)] outline-none transition-all focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20">
+        <select className="rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-2.5 text-sm text-[var(--text-secondary)] outline-none transition-all focus:border-[var(--accent)]/50 focus:ring-1 focus:ring-violet-500/20">
           <option>All Status</option>
           <option>Completed</option>
           <option>Processing</option>
@@ -373,7 +373,7 @@ export function RecentOrders() {
           <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--hover-bg)] text-[var(--text-tertiary)] transition-all hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]">
             <ChevronLeft size={16} />
           </button>
-          <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-violet-500 bg-violet-500 text-[var(--text-primary)]">
+          <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-violet-500 bg-[var(--accent)] text-[var(--text-primary)]">
             1
           </button>
           <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--hover-bg)] text-[var(--text-tertiary)] transition-all hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]">

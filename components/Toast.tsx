@@ -21,10 +21,10 @@ interface ToastContextType {
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 const VARIANTS = {
-  success: { icon: CheckCircle2, bg: "bg-emerald-500/10", border: "border-emerald-500/30", text: "text-emerald-400" },
-  error: { icon: AlertCircle, bg: "bg-red-500/10", border: "border-red-500/30", text: "text-red-400" },
-  warning: { icon: AlertCircle, bg: "bg-amber-500/10", border: "border-amber-500/30", text: "text-amber-400" },
-  info: { icon: Info, bg: "bg-blue-500/10", border: "border-blue-500/30", text: "text-blue-400" },
+  success: { icon: CheckCircle2, bg: "bg-[var(--success-bg)]", border: "border-emerald-500/30", text: "text-[var(--text-success)]" },
+  error: { icon: AlertCircle, bg: "bg-[var(--danger-bg)]", border: "border-red-500/30", text: "text-[var(--text-danger)]" },
+  warning: { icon: AlertCircle, bg: "bg-[var(--warning-bg)]", border: "border-amber-500/30", text: "text-[var(--text-warning)]" },
+  info: { icon: Info, bg: "bg-[var(--info-bg)]", border: "border-blue-500/30", text: "text-[var(--text-info)]" },
 };
 
 let idCounter = 0;

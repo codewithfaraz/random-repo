@@ -64,8 +64,8 @@ export function SkeletonCard({
           <div className={`h-4 w-3/4 rounded-full bg-[var(--hover-bg-strong)] ${animated ? "animate-pulse" : ""}`} />
           <div className={`h-3 w-1/2 rounded-full bg-[var(--hover-bg-strong)] ${animated ? "animate-pulse" : ""}`} />
           <div className="mt-auto flex items-center justify-between pt-2">
-            <div className={`h-5 w-20 rounded-full bg-violet-500/10 ${animated ? "animate-pulse" : ""}`} />
-            <div className={`h-8 w-28 rounded-xl bg-violet-500/20 ${animated ? "animate-pulse" : ""}`} />
+            <div className={`h-5 w-20 rounded-full bg-[var(--accent)]/10 ${animated ? "animate-pulse" : ""}`} />
+            <div className={`h-8 w-28 rounded-xl bg-[var(--accent)]/20 ${animated ? "animate-pulse" : ""}`} />
           </div>
         </div>
       </div>
@@ -76,7 +76,7 @@ export function SkeletonCard({
     return (
       <div className="relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)]/[0.03] p-6 backdrop-blur-xl">
         <div className="flex items-start justify-between">
-          <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-violet-500/10 ${animated ? "animate-pulse" : ""}`} />
+          <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent)]/10 ${animated ? "animate-pulse" : ""}`} />
           <div className={`h-5 w-20 rounded-full bg-[var(--hover-bg-strong)] ${animated ? "animate-pulse" : ""}`} />
         </div>
         <div className="mt-5">

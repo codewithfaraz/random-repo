@@ -16,6 +16,7 @@ import {
   ArrowUpDown,
   ChevronDown,
 } from "lucide-react";
+import { DeleteConfirmModal } from "@/components/DeleteConfirmModal";
 
 // ─── Order Data ──────────────────────────────────────────
 const initialOrders = [
@@ -32,10 +33,10 @@ const initialOrders = [
 ];
 
 const statusConfig = {
-  completed: { label: "Completed", color: "text-emerald-400", bg: "bg-emerald-400/10", icon: CheckCircle2 },
-  processing: { label: "Processing", color: "text-blue-400", bg: "bg-blue-400/10", icon: Clock },
-  pending: { label: "Pending", color: "text-amber-400", bg: "bg-amber-400/10", icon: Clock },
-  cancelled: { label: "Cancelled", color: "text-red-400", bg: "bg-red-400/10", icon: XCircle },
+  completed: { label: "Completed", color: "text-[var(--text-success)]", bg: "bg-emerald-400/10", icon: CheckCircle2 },
+  processing: { label: "Processing", color: "text-[var(--text-info)]", bg: "bg-blue-400/10", icon: Clock },
+  pending: { label: "Pending", color: "text-[var(--text-warning)]", bg: "bg-amber-400/10", icon: Clock },
+  cancelled: { label: "Cancelled", color: "text-[var(--text-danger)]", bg: "bg-red-400/10", icon: XCircle },
 };
 
 const ITEMS_PER_PAGE = 5;
@@ -48,6 +49,8 @@ export default function OrdersPage() {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [sortField, setSortField] = useState<"id" | "customer" | "product" | "amount" | "date" | null>(null);
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deletingOrderId, setDeletingOrderId] = useState<string | null>(null);
 
   // Filtered & Sorted
   const filteredOrders = useMemo(() => {
@@ -91,7 +94,7 @@ export default function OrdersPage() {
           <h1 className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">Orders</h1>
           <p className="text-sm text-[var(--text-tertiary)]">Manage and track all orders</p>
         </div>
-        <span className="rounded-full bg-violet-500/10 px-3 py-1.5 text-xs font-semibold text-violet-400">
+        <span className="rounded-full bg-[var(--accent)]/10 px-3 py-1.5 text-xs font-semibold text-[var(--accent)]">
           {orders.length} orders
         </span>
       </div>
@@ -105,13 +108,13 @@ export default function OrdersPage() {
             placeholder="Search orders..."
             value={searchQuery}
             onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-            className="w-full sm:w-64 rounded-full border border-[var(--border)] bg-[var(--hover-bg)] py-2 pl-9 pr-4 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+            className="w-full sm:w-64 rounded-full border border-[var(--border)] bg-[var(--hover-bg)] py-2 pl-9 pr-4 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none focus:border-[var(--accent)]/50 focus:ring-1 focus:ring-violet-500/20"
           />
         </div>
         <select
           value={statusFilter}
           onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }}
-          className="rounded-full border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-2 text-sm text-[var(--text-secondary)] outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+          className="rounded-full border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-2 text-sm text-[var(--text-secondary)] outline-none focus:border-[var(--accent)]/50 focus:ring-1 focus:ring-violet-500/20"
         >
           <option>All</option>
           <option>Completed</option>
@@ -189,13 +192,13 @@ export default function OrdersPage() {
                           <MoreVertical size={15} />
                         </button>
                         {openMenuId === order.id && (
-<div className="absolute right-0 top-full z-50 mt-1 w-40 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-1 shadow-2xl shadow-black/60">
+                          <div className="absolute right-0 top-full z-50 mt-1 w-40 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-1 shadow-2xl shadow-[var(--shadow-color)]">
                             <button className="flex w-full items-center gap-2 rounded-lg px-4 py-2.5 text-sm text-[var(--text-secondary)] transition-all hover:bg-[var(--hover-bg)] hover:text-[var(--text-primary)] focus:bg-[var(--hover-bg)] focus:outline-none">
                               ✏️ Edit
                             </button>
                             <button
-                              onClick={() => setOrders((p) => p.filter((o) => o.id !== order.id))}
-                              className="flex w-full items-center gap-2 rounded-lg px-4 py-2.5 text-sm text-red-400/80 hover:bg-red-500/10"
+                              onClick={() => { setOpenMenuId(null); setDeletingOrderId(order.id); }}
+                              className="flex w-full items-center gap-2 rounded-lg px-4 py-2.5 text-sm text-[var(--text-danger)]/80 hover:bg-[var(--danger-bg)]"
                             >
                               🗑️ Delete
                             </button>
@@ -210,7 +213,10 @@ export default function OrdersPage() {
                 <tr>
                   <td colSpan={7} className="py-16 text-center text-[var(--text-tertiary)]">
                     <ShoppingBag size={48} className="mx-auto mb-3 opacity-50" />
-                    <p className="text-sm">No orders match your filters</p>
+                    <div className="text-center">
+                      <p className="text-sm text-[var(--text-tertiary)]">No orders match your filters</p>
+                      <p className="mt-1 text-xs text-[var(--text-tertiary)]/60">Try adjusting your search or filter criteria</p>
+                    </div>
                   </td>
                 </tr>
               )}
@@ -218,6 +224,18 @@ export default function OrdersPage() {
           </table>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmModal
+        orderId={deletingOrderId || ""}
+        open={deleteModalOpen}
+        onClose={() => { setDeleteModalOpen(false); setDeletingOrderId(null); }}
+        onConfirm={() => {
+          setOrders((p) => p.filter((o) => o.id !== deletingOrderId));
+          setDeleteModalOpen(false);
+          setDeletingOrderId(null);
+        }}
+      />
 
       {/* Pagination */}
       {totalPages > 1 && (
@@ -239,7 +257,7 @@ export default function OrdersPage() {
                 onClick={() => setCurrentPage(p)}
                 className={`flex h-9 w-9 items-center justify-center rounded-lg border px-2 text-sm font-medium transition-all ${
                   currentPage === p
-                    ? "border-violet-500 bg-violet-500 text-[var(--text-primary)] shadow-lg shadow-violet-500/25"
+                    ? "border-violet-500 bg-[var(--accent)] text-[var(--text-primary)] shadow-lg shadow-[var(--accent)]/25"
                     : "border-[var(--border)] bg-[var(--hover-bg)] text-[var(--text-secondary)]"
                 }`}
               >

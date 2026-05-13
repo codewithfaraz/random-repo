@@ -40,8 +40,8 @@ export default function DashboardPage() {
               onClick={() => setTimeRange(range)}
               className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
                 timeRange === range
-                  ? "bg-violet-500 text-[var(--text-primary)] shadow-lg shadow-violet-500/25"
-                  : "bg-[var(--hover-bg)] text-[var(--text-secondary)] hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]"
+                  ? "bg-[var(--accent)] text-[var(--text-primary)] shadow-lg shadow-[var(--accent)]/25"
+                  : "bg-[var(--hover-bg)] text-[var(--text-secondary)] hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)] transition-colors"
               }`}
             >
               {range === "7d"
@@ -168,14 +168,14 @@ export default function DashboardPage() {
               Top Product
             </h4>
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-xs font-bold">
+              <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-[var(--accent)] to-[var(--accent-hover)] flex items-center justify-center text-xs font-bold">
                 P
               </div>
               <div className="flex-1">
                 <p className="text-sm font-medium text-[var(--text-primary)]">
                   Premium Wireless Headphones
                 </p>
-                <p className="text-[11px] text-violet-400">
+                <p className="text-[11px] text-[var(--accent)]">
                   $149.99 • 382 sold
                 </p>
               </div>
@@ -188,9 +188,9 @@ export default function DashboardPage() {
             <div className="flex items-start gap-2">
               <AlertCircle
                 size={14}
-                className="mt-0.5 shrink-0 text-amber-400"
+                className="mt-0.5 shrink-0 text-[var(--text-warning)]"
               />
-              <p className="text-xs text-amber-400/80">
+              <p className="text-xs text-[var(--text-warning)]/80">
                 <strong>Low stock:</strong> 3 products are running low. Check
                 inventory now.
               </p>

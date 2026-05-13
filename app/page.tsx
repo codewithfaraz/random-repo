@@ -9,21 +9,21 @@ const heroSlides = [
     subtitle: "Up to 50% off on premium electronics & gadgets",
     cta: "Shop Now",
     bg: "from-violet-600 via-fuchsia-600 to-pink-600",
-    icon: <Zap size={120} className="text-white/20" />,
+    icon: <Zap size={120} className="text-[var(--text-primary)]/20" />,
   },
   {
     title: "New Arrivals Just Dropped",
     subtitle: "Discover the latest in tech, fashion, and home essentials",
     cta: "Explore New",
     bg: "from-blue-600 via-cyan-500 to-teal-500",
-    icon: <Package size={120} className="text-white/20" />,
+    icon: <Package size={120} className="text-[var(--text-primary)]/20" />,
   },
   {
     title: "Free Shipping on Orders $50+",
     subtitle: "Fast, reliable delivery straight to your doorstep",
     cta: "Learn More",
     bg: "from-emerald-600 via-green-500 to-lime-500",
-    icon: <Truck size={120} className="text-white/20" />,
+    icon: <Truck size={120} className="text-[var(--text-primary)]/20" />,
   },
 ];
 
@@ -78,30 +78,30 @@ export default function HomePage() {
             >
               {/* Decorative elements */}
               <div className="absolute top-0 left-0 h-full w-full overflow-hidden pointer-events-none">
-                <div className="absolute -top-20 -left-20 h-[400px] w-[400px] rounded-full bg-white/5 blur-3xl" />
-                <div className="absolute -bottom-20 -right-20 h-[400px] w-[400px] rounded-full bg-white/5 blur-3xl" />
+                <div className="absolute -top-20 -left-20 h-[400px] w-[400px] rounded-full bg-[var(--surface)]/5 blur-3xl" />
+                <div className="absolute -bottom-20 -right-20 h-[400px] w-[400px] rounded-full bg-[var(--surface)]/5 blur-3xl" />
               </div>
 
               <div className="relative z-10 max-w-3xl">
-                <p className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-white/70">
+                <p className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-[var(--text-primary)]/70">
                   Limited Time Offer
                 </p>
-                <h1 className="mb-4 text-5xl font-black tracking-tighter text-white sm:text-6xl md:text-7xl">
+                <h1 className="mb-4 text-5xl font-black tracking-tighter text-[var(--text-primary)] sm:text-6xl md:text-7xl">
                   {slide.title}
                 </h1>
-                <p className="mb-8 max-w-lg text-lg text-white/60 sm:text-xl">
+                <p className="mb-8 max-w-lg text-lg text-[var(--text-primary)]/60 sm:text-xl">
                   {slide.subtitle}
                 </p>
                 <div className="flex items-center justify-center gap-4">
                   <Link
                     href="/dashboard"
-                    className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-base font-bold text-black shadow-xl transition-all hover:-translate-y-0.5 hover:shadow-2xl"
+                    className="inline-flex items-center gap-2 rounded-full bg-[var(--accent)] px-8 py-4 text-base font-bold text-[var(--text-primary)] shadow-xl transition-all hover:-translate-y-0.5 hover:shadow-2xl"
                   >
                     {slide.cta} <ArrowRight size={18} />
                   </Link>
                   <Link
                     href="/dashboard/products"
-                    className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-8 py-4 text-base font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/20"
+                    className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-[var(--surface)]/10 px-8 py-4 text-base font-semibold text-[var(--text-primary)] backdrop-blur-sm transition-all hover:bg-[var(--surface)]/20"
                   >
                     Browse All
                   </Link>
@@ -125,9 +125,9 @@ export default function HomePage() {
           {features.map((f, i) => (
             <div
               key={i}
-              className="flex flex-col items-center gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)]/[0.03] p-8 text-center transition-all duration-300 hover:border-violet-500/30 hover:bg-[var(--hover-bg)]"
+              className="flex flex-col items-center gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)]/[0.03] p-8 text-center transition-all duration-300 hover:border-[var(--accent)]/30 hover:bg-[var(--hover-bg)]"
             >
-              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-violet-500/10 text-violet-400">
+              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-[var(--accent)]/10 text-[var(--accent)]">
                 {f.icon}
               </div>
               <h3 className="text-base font-bold tracking-tight text-[var(--text-primary)]">
@@ -154,7 +154,7 @@ export default function HomePage() {
           </div>
           <Link
             href="/dashboard/products"
-            className="inline-flex items-center gap-1 text-sm font-semibold text-violet-400 hover:underline"
+            className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--accent)] hover:underline"
           >
             View All <ArrowRight size={14} />
           </Link>
@@ -163,7 +163,7 @@ export default function HomePage() {
         <Carousel opts={{ loop: true, align: "start", slidesToScroll: 2 }} arrows dots>
           {trendingProducts.map((product, i) => (
             <div key={i} className="min-w-[240px] max-w-[280px] px-2">
-              <div className="flex flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] transition-all duration-300 hover:border-violet-500/30 hover:shadow-2xl hover:shadow-violet-500/5">
+              <div className="flex flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] transition-all duration-300 hover:border-[var(--accent)]/30 hover:shadow-2xl hover:shadow-[var(--accent)]/5">
                 <div className="flex aspect-square items-center justify-center bg-[var(--hover-bg)] text-6xl">
                   {product.image}
                 </div>
@@ -172,7 +172,7 @@ export default function HomePage() {
                     <h3 className="text-sm font-semibold text-[var(--text-primary)]">
                       {product.name}
                     </h3>
-                    <span className="text-sm font-bold text-violet-400">{product.price}</span>
+                    <span className="text-sm font-bold text-[var(--accent)]">{product.price}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <div className="flex gap-0.5">
@@ -182,8 +182,8 @@ export default function HomePage() {
                           size={12}
                           className={
                             s < Math.floor(product.rating)
-                              ? "text-amber-400 fill-amber-400"
-                              : "text-gray-500"
+                              ? "text-[var(--text-warning)] fill-[var(--warning)]"
+                              : "text-[var(--text-tertiary)]"
                           }
                         />
                       ))}
@@ -192,7 +192,7 @@ export default function HomePage() {
                       {product.rating} ({product.reviews})
                     </span>
                   </div>
-                  <button className="mt-auto rounded-xl border border-violet-500/30 bg-violet-500/10 py-2.5 text-sm font-semibold text-violet-400 transition-all hover:bg-violet-500 hover:text-white">
+                  <button className="mt-auto rounded-xl border border-[var(--accent)]/30 bg-[var(--accent)]/10 py-2.5 text-sm font-semibold text-[var(--accent)] transition-all hover:bg-[var(--accent)] hover:text-[var(--text-primary)]">
                     Add to Cart
                   </button>
                 </div>
@@ -222,10 +222,10 @@ export default function HomePage() {
             <Link
               key={i}
               href={`/dashboard/products?category=${cat.name.toLowerCase()}`}
-              className="group flex flex-col items-center gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)]/[0.03] p-6 transition-all duration-300 hover:border-violet-500/30 hover:bg-[var(--hover-bg)]"
+              className="group flex flex-col items-center gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)]/[0.03] p-6 transition-all duration-300 hover:border-[var(--accent)]/30 hover:bg-[var(--hover-bg)]"
             >
               <span className="text-4xl">{cat.icon}</span>
-              <span className="text-sm font-semibold text-[var(--text-primary)] group-hover:text-violet-400">
+              <span className="text-sm font-semibold text-[var(--text-primary)] group-hover:text-[var(--accent)]">
                 {cat.name}
               </span>
               <span className="text-[11px] text-[var(--text-tertiary)]">
@@ -241,21 +241,21 @@ export default function HomePage() {
           ═══════════════════════════════════════════ */}
       <section className="relative mx-auto max-w-7xl my-20 px-6">
         <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-violet-600 via-fuchsia-600 to-pink-600 px-12 py-16 text-center">
-          <h2 className="mb-3 text-3xl font-black tracking-tighter text-white sm:text-4xl">
+          <h2 className="mb-3 text-3xl font-black tracking-tighter text-[var(--text-primary)] sm:text-4xl">
             Stay in the Loop 📬
           </h2>
-          <p className="mx-auto mb-8 max-w-lg text-white/70">
+          <p className="mx-auto mb-8 max-w-lg text-[var(--text-primary)]/70">
             Get exclusive deals, new arrivals, and trend alerts delivered to your inbox weekly.
           </p>
           <form className="mx-auto flex max-w-md gap-2">
             <input
               type="email"
               placeholder="Enter your email"
-              className="flex-1 rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm text-white placeholder:text-white/40 outline-none focus:border-white/50 focus:ring-2 focus:ring-white/20"
+              className="flex-1 rounded-full border border-white/20 bg-[var(--surface)]/10 px-5 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-primary)]/40 outline-none focus:border-white/50 focus:ring-2 focus:ring-white/20"
             />
             <button
               type="submit"
-              className="whitespace-nowrap rounded-full bg-white px-6 py-3 text-sm font-bold text-violet-600 shadow-lg shadow-black/20 transition-all hover:-translate-y-0.5 hover:shadow-xl"
+              className="whitespace-nowrap rounded-full bg-white px-6 py-3 text-sm font-bold text-violet-600 shadow-lg shadow-[var(--shadow-color)] transition-all hover:-translate-y-0.5 hover:shadow-xl"
             >
               Subscribe ✨
             </button>

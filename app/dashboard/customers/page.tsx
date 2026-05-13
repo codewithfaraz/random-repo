@@ -27,9 +27,9 @@ const customers = [
 ];
 
 const statusMap = {
-  active: { label: "Active", color: "text-emerald-400", bg: "bg-emerald-400/10" },
-  inactive: { label: "Inactive", color: "text-gray-400", bg: "bg-gray-400/10" },
-  away: { label: "Away", color: "text-amber-400", bg: "bg-amber-400/10" },
+  active: { label: "Active", color: "text-[var(--text-success)]", bg: "bg-emerald-400/10" },
+  inactive: { label: "Inactive", color: "text-[var(--text-tertiary)]", bg: "bg-gray-400/10" },
+  away: { label: "Away", color: "text-[var(--text-warning)]", bg: "bg-amber-400/10" },
 };
 
 export default function CustomersPage() {
@@ -73,7 +73,7 @@ export default function CustomersPage() {
           <h1 className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">Customers</h1>
           <p className="text-sm text-[var(--text-tertiary)]">Manage your customer base</p>
         </div>
-        <span className="rounded-full bg-violet-500/10 px-3 py-1.5 text-xs font-semibold text-violet-400">
+        <span className="rounded-full bg-[var(--accent)]/10 px-3 py-1.5 text-xs font-semibold text-[var(--accent)]">
           {customers.length} customers
         </span>
       </div>
@@ -87,13 +87,13 @@ export default function CustomersPage() {
             placeholder="Search customers..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full sm:w-64 rounded-full border border-[var(--border)] bg-[var(--hover-bg)] py-2 pl-9 pr-4 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+            className="w-full sm:w-64 rounded-full border border-[var(--border)] bg-[var(--hover-bg)] py-2 pl-9 pr-4 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none focus:border-[var(--accent)]/50 focus:ring-1 focus:ring-violet-500/20"
           />
         </div>
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="rounded-full border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-2 text-sm text-[var(--text-secondary)] outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+          className="rounded-full border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-2 text-sm text-[var(--text-secondary)] outline-none focus:border-[var(--accent)]/50 focus:ring-1 focus:ring-violet-500/20"
         >
           <option>All</option>
           <option>Active</option>

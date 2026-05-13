@@ -49,7 +49,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          className="fixed inset-0 z-40 bg-[var(--modal-overlay)] lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -62,11 +62,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       >
         {/* Logo */}
         <div className="flex items-center gap-3 border-b border-[var(--border)] px-6 py-5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 text-sm font-black shadow-lg shadow-violet-500/25">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--accent)] to-[var(--accent-hover)] text-sm font-black shadow-lg shadow-[var(--accent)]/25">
             H
           </div>
           <span className="text-lg font-bold tracking-tight bg-gradient-to-r from-[var(--text-primary)] to-[var(--text-secondary)] bg-clip-text text-transparent">
-            Hermes <span className="text-xs font-medium text-violet-400">Admin</span>
+            Hermes <span className="text-xs font-medium text-[var(--accent)]">Admin</span>
           </span>
           <button
             onClick={() => setSidebarOpen(false)}
@@ -99,7 +99,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     href={item.href}
                     className={`group mb-1 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
                       isActive
-                        ? "bg-violet-500/10 text-[var(--text-primary)] border-l-2 border-violet-500 shadow-inner shadow-violet-500/5"
+                        ? "bg-[var(--accent)]/10 text-[var(--text-primary)] border-l-2 border-violet-500 shadow-inner shadow-[var(--accent)]/5"
                         : "text-[var(--text-secondary)] hover:bg-[var(--hover-bg)] hover:text-[var(--text-primary)] hover:translate-x-0.5"
                     }`}
                     onClick={() => setSidebarOpen(false)}
@@ -107,7 +107,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     <item.icon size={18} strokeWidth={1.5} className="shrink-0" />
                     {item.label}
                     {isActive && (
-                      <span className="ml-auto text-[10px] text-violet-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span className="ml-auto text-[10px] text-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity">
                         ●
                       </span>
                     )}

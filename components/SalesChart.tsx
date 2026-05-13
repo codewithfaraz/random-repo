@@ -72,14 +72,14 @@ export function SalesChart({ timeRange }: SalesChartProps) {
             Revenue & orders over time
           </p>
         </div>
-        <div className="flex items-center gap-2 rounded-xl bg-emerald-500/10 px-3 py-1.5">
+        <div className="flex items-center gap-2 rounded-xl bg-[var(--success-bg)] px-3 py-1.5">
           {growth >= 0 ? (
-            <TrendingUp size={14} className="text-emerald-400" />
+            <TrendingUp size={14} className="text-[var(--text-success)]" />
           ) : (
-            <TrendingDown size={14} className="text-red-400" />
+            <TrendingDown size={14} className="text-[var(--text-danger)]" />
           )}
 <span
-            className={`text-xs font-semibold ${growth >= 0 ? "text-emerald-400" : "text-red-400"}`}
+            className={`text-xs font-semibold ${growth >= 0 ? "text-[var(--text-success)]" : "text-[var(--text-danger)]"}`}
           >
             {growth >= 0 ? "+" : ""}
             {growth.toFixed(1)}% vs prev period

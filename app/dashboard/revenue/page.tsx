@@ -54,10 +54,10 @@ function StatCard({ title, value, change, changeType, icon, subtitle }: {
   return (
     <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)]/[0.03] p-6 backdrop-blur-xl transition-all duration-300 hover:border-[var(--border)] hover:bg-[var(--hover-bg-strong)]">
       <div className="flex items-start justify-between">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-500/10 text-violet-400">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent)]/10 text-[var(--accent)]">
           {icon}
         </div>
-        <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${isUp ? "bg-emerald-500/10 text-emerald-400" : "bg-red-500/10 text-red-400"}`}>
+        <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${isUp ? "bg-[var(--success-bg)] text-[var(--text-success)]" : "bg-[var(--danger-bg)] text-[var(--text-danger)]"}`}>
           {isUp ? "↑" : "↓"} {change > 0 ? "+" : ""}{change.toFixed(1)}%
         </span>
       </div>
@@ -115,7 +115,7 @@ export default function RevenuePage() {
               onClick={() => setPeriod(p as any)}
               className={`rounded-full px-4 py-1.5 text-xs font-semibold uppercase transition-all ${
                 period === p
-                  ? "bg-violet-500 text-[var(--text-primary)] shadow-lg shadow-violet-500/25"
+                  ? "bg-[var(--accent)] text-[var(--text-primary)] shadow-lg shadow-[var(--accent)]/25"
                   : "bg-[var(--hover-bg)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
               }`}
             >
@@ -170,14 +170,14 @@ export default function RevenuePage() {
             placeholder="Search months..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full sm:w-48 rounded-full border border-[var(--border)] bg-[var(--hover-bg)] py-2 pl-9 pr-4 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+            className="w-full sm:w-48 rounded-full border border-[var(--border)] bg-[var(--hover-bg)] py-2 pl-9 pr-4 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none focus:border-[var(--accent)]/50 focus:ring-1 focus:ring-violet-500/20"
           />
         </div>
         {period === "monthly" && (
           <select
             value={rangeFilter}
             onChange={(e) => setRangeFilter(e.target.value as any)}
-            className="rounded-full border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-2 text-sm text-[var(--text-secondary)] outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+            className="rounded-full border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-2 text-sm text-[var(--text-secondary)] outline-none focus:border-[var(--accent)]/50 focus:ring-1 focus:ring-violet-500/20"
           >
             <option value="all">All Months</option>
             <option value="Q1">Q1 (Jan–Mar)</option>
@@ -228,9 +228,9 @@ export default function RevenuePage() {
                     <span className="text-sm font-semibold text-[var(--text-primary)]">{formatCurrency(d.revenue)}</span>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <span className="text-sm font-semibold text-red-400">-{formatCurrency(d.expenses)}</span>
+                    <span className="text-sm font-semibold text-[var(--text-danger)]">-{formatCurrency(d.expenses)}</span>
                   </td>
-                  <td className={`px-6 py-4 text-right text-sm font-bold ${isPositive ? "text-emerald-400" : "text-red-400"}`}>
+                  <td className={`px-6 py-4 text-right text-sm font-bold ${isPositive ? "text-[var(--text-success)]" : "text-[var(--text-danger)]"}`}>
                     {isPositive ? "+" : "-"}{formatCurrency(Math.abs(profit))}
                     <span className="ml-1 text-[10px] text-[var(--text-tertiary)]">({profitMargin}%)</span>
                   </td>
@@ -239,7 +239,7 @@ export default function RevenuePage() {
                   </td>
                   {period === "monthly" && (
                     <td className="px-6 py-4 text-right">
-                      <span className={`text-sm font-semibold ${growth >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+                      <span className={`text-sm font-semibold ${growth >= 0 ? "text-[var(--text-success)]" : "text-[var(--text-danger)]"}`}>
                         {growth > 0 ? "+" : ""}{growth.toFixed(1)}%
                       </span>
                     </td>
@@ -262,7 +262,7 @@ export default function RevenuePage() {
           <div key={i} className="rounded-2xl border border-[var(--border)] bg-[var(--surface)]/[0.03] p-6 text-center">
             <p className="text-sm font-medium uppercase tracking-wider text-[var(--text-tertiary)]">{q.label}</p>
             <p className="mt-2 text-2xl font-black text-[var(--text-primary)]">{formatCurrency(q.value)}</p>
-            <p className="mt-1 text-sm font-semibold text-emerald-400">↑ {q.growth}% vs prev</p>
+            <p className="mt-1 text-sm font-semibold text-[var(--text-success)]">↑ {q.growth}% vs prev</p>
           </div>
         ))}
       </div>

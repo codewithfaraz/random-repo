@@ -2,18 +2,21 @@
 
 interface DeleteConfirmModalProps {
   orderId: string;
+  open?: boolean;
   onClose: () => void;
   onConfirm: () => void;
 }
 
 export function DeleteConfirmModal({
   orderId,
+  open = true,
   onClose,
   onConfirm,
 }: DeleteConfirmModalProps) {
+  if (!open) return null;
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[var(--modal-overlay)] backdrop-blur-sm"
       role="alertdialog"
       aria-modal="true"
       aria-labelledby="delete-title"
@@ -22,11 +25,11 @@ export function DeleteConfirmModal({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="relative w-full max-w-sm rounded-2xl border border-red-500/20 border-[var(--border)]/30 bg-[var(--surface)]/[0.95] p-6 shadow-2xl shadow-red-500/10 backdrop-blur-xl animate-fade-in-up transition-all duration-300 hover:scale-[1.02] hover:shadow-red-500/20">
+      <div className="relative w-full max-w-sm rounded-2xl border border-[var(--danger-border)] border-[var(--border)]/30 bg-[var(--surface)]/[0.95] p-6 shadow-2xl shadow-red-500/10 backdrop-blur-xl animate-fade-in-up transition-all duration-300 hover:scale-[1.02] hover:shadow-red-500/20">
         {/* Icon */}
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-red-500/10 shadow-lg shadow-red-500/20">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[var(--danger-bg)] shadow-lg shadow-red-500/20">
           <svg
-            className="h-8 w-8 text-red-400"
+            className="h-8 w-8 text-[var(--text-danger)]"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -73,7 +76,7 @@ export function DeleteConfirmModal({
               onConfirm();
               onClose();
             }}
-            className="flex-1 rounded-xl bg-gradient-to-r from-red-500 to-rose-600 px-4 py-3 text-sm font-bold text-[var(--text-primary)] shadow-lg shadow-red-500/25 transition-all hover:shadow-xl hover:shadow-red-500/40"
+            className="flex-1 rounded-xl bg-gradient-to-r from-[var(--danger)] to-[var(--danger-hover)] px-4 py-3 text-sm font-bold text-[var(--text-primary)] shadow-lg shadow-red-500/25 transition-all hover:shadow-xl hover:shadow-red-500/40"
           >
             Delete Order
           </button>

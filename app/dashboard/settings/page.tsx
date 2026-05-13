@@ -99,7 +99,7 @@ export default function SettingsPage() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 ${
                   activeTab === tab.id
-                    ? "bg-violet-500/10 text-violet-400 shadow-inner shadow-violet-500/10"
+                    ? "bg-[var(--accent)]/10 text-[var(--accent)] shadow-inner shadow-violet-500/10"
                     : "text-[var(--text-secondary)] hover:bg-[var(--hover-bg)] hover:text-[var(--text-primary)]"
                 }`}
               >
@@ -125,7 +125,7 @@ export default function SettingsPage() {
                   <input
                     type="text"
                     defaultValue="Admin User"
-                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all duration-200 focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all duration-200 focus:border-[var(--accent)]/50 focus:ring-1 focus:ring-violet-500/20"
                   />
                 </div>
                 <div>
@@ -133,7 +133,7 @@ export default function SettingsPage() {
                   <input
                     type="text"
                     defaultValue="HermesAdmin"
-                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all duration-200 focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all duration-200 focus:border-[var(--accent)]/50 focus:ring-1 focus:ring-violet-500/20"
                   />
                 </div>
                 <div className="sm:col-span-2">
@@ -141,7 +141,7 @@ export default function SettingsPage() {
                   <textarea
                     rows={3}
                     defaultValue="E-commerce store administrator managing products, orders, and customer relationships."
-                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all duration-200 focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20 resize-none"
+                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all duration-200 focus:border-[var(--accent)]/50 focus:ring-1 focus:ring-violet-500/20 resize-none"
                   />
                 </div>
                 <div className="sm:col-span-2">
@@ -160,7 +160,7 @@ export default function SettingsPage() {
                 </button>
                 <button
                   onClick={handleSaveProfile}
-                  className="rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 px-6 py-2.5 text-sm font-bold text-[var(--text-primary)] shadow-lg shadow-violet-500/25 transition-all duration-200 hover:shadow-xl hover:shadow-violet-500/40 flex items-center gap-2"
+                  className="rounded-xl bg-gradient-to-r from-[var(--accent)] to-[var(--accent-hover)] px-6 py-2.5 text-sm font-bold text-[var(--text-primary)] shadow-lg shadow-[var(--accent)]/25 transition-all duration-200 hover:shadow-xl hover:shadow-[var(--accent)]/40 flex items-center gap-2"
                 >
                   <Save size={15} />
                   {saveSuccess ? "✓ Saved!" : "Save Changes"}
@@ -175,7 +175,7 @@ export default function SettingsPage() {
               {/* Change Password */}
               <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)]/[0.03] p-6 backdrop-blur-xl">
                 <h2 className="mb-6 flex items-center gap-2 text-lg font-bold tracking-tight text-[var(--text-primary)]">
-                  <Lock size={20} className="text-violet-400" />
+                  <Lock size={20} className="text-[var(--accent)]" />
                   Change Password
                 </h2>
                 <div className="space-y-4">
@@ -185,7 +185,7 @@ export default function SettingsPage() {
                       <input
                         type={showPassword ? "text" : "password"}
                         placeholder="••••••••"
-                        className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all duration-200 focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+                        className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all duration-200 focus:border-[var(--accent)]/50 focus:ring-1 focus:ring-violet-500/20"
                       />
                       <button
                         type="button"
@@ -201,7 +201,7 @@ export default function SettingsPage() {
                     <input
                       type="password"
                       placeholder="••••••••"
-                      className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all duration-200 focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+                      className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all duration-200 focus:border-[var(--accent)]/50 focus:ring-1 focus:ring-violet-500/20"
                     />
                   </div>
                   <div>
@@ -209,14 +209,14 @@ export default function SettingsPage() {
                     <input
                       type="password"
                       placeholder="••••••••"
-                      className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all duration-200 focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+                      className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all duration-200 focus:border-[var(--accent)]/50 focus:ring-1 focus:ring-violet-500/20"
                     />
                   </div>
                 </div>
                 <div className="mt-6 flex justify-end">
                   <button
                     onClick={handlePasswordChange}
-                    className="rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 px-6 py-2.5 text-sm font-bold text-[var(--text-primary)] shadow-lg shadow-violet-500/25 transition-all duration-200 hover:shadow-xl hover:shadow-violet-500/40 flex items-center gap-2"
+                    className="rounded-xl bg-gradient-to-r from-[var(--accent)] to-[var(--accent-hover)] px-6 py-2.5 text-sm font-bold text-[var(--text-primary)] shadow-lg shadow-[var(--accent)]/25 transition-all duration-200 hover:shadow-xl hover:shadow-[var(--accent)]/40 flex items-center gap-2"
                   >
                     <Lock size={15} />
                     Update Password
@@ -243,7 +243,7 @@ export default function SettingsPage() {
                       });
                     }}
                     className={`relative flex h-6 w-12 items-center rounded-full border transition-colors duration-300 ${
-                      twoFaEnabled ? "border-violet-500 bg-violet-500" : "border-[var(--border)] bg-[var(--hover-bg)]"
+                      twoFaEnabled ? "border-violet-500 bg-[var(--accent)]" : "border-[var(--border)] bg-[var(--hover-bg)]"
                     }`}
                   >
                     <div
@@ -273,14 +273,14 @@ export default function SettingsPage() {
                       {item.connected ? (
                         <button
                           onClick={() => toast({ title: `${item.label} Disconnected`, variant: "warning" })}
-                          className="rounded-lg border border-red-500/30 px-3 py-1.5 text-xs font-semibold text-red-400 hover:bg-red-500/10 transition-all duration-200"
+                          className="rounded-lg border border-red-500/30 px-3 py-1.5 text-xs font-semibold text-[var(--text-danger)] hover:bg-[var(--danger-bg)] transition-all duration-200"
                         >
                           Disconnect
                         </button>
                       ) : (
                         <button
                           onClick={() => toast({ title: `${item.label} Connected`, variant: "success" })}
-                          className="rounded-lg border border-violet-500/30 px-3 py-1.5 text-xs font-semibold text-violet-400 hover:bg-violet-500/10 transition-all duration-200"
+                          className="rounded-lg border border-[var(--accent)]/30 px-3 py-1.5 text-xs font-semibold text-[var(--accent)] hover:bg-[var(--accent)]/10 transition-all duration-200"
                         >
                           Connect
                         </button>
@@ -315,7 +315,7 @@ export default function SettingsPage() {
                         });
                       }}
                       className={`relative flex h-6 w-12 items-center rounded-full border transition-colors duration-300 ${
-                        n.checked ? "border-violet-500 bg-violet-500" : "border-[var(--border)] bg-[var(--hover-bg-strong)]"
+                        n.checked ? "border-violet-500 bg-[var(--accent)]" : "border-[var(--border)] bg-[var(--hover-bg-strong)]"
                       }`}
                     >
                       <div
@@ -356,7 +356,7 @@ export default function SettingsPage() {
                     <h3 className="text-sm font-semibold text-[var(--text-primary)]">Current Plan</h3>
                     <p className="text-xs text-[var(--text-tertiary)] mt-1">Pro Plan — $29/month</p>
                   </div>
-                  <button className="rounded-xl border border-violet-500/30 px-4 py-2 text-xs font-semibold text-violet-400 hover:bg-violet-500/10 transition-all duration-200">
+                  <button className="rounded-xl border border-[var(--accent)]/30 px-4 py-2 text-xs font-semibold text-[var(--accent)] hover:bg-[var(--accent)]/10 transition-all duration-200">
                     Manage Plan
                   </button>
                 </div>
@@ -377,15 +377,15 @@ export default function SettingsPage() {
                 <h3 className="mb-4 text-sm font-semibold text-[var(--text-primary)]">Payment Methods</h3>
                 <div className="flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] p-4">
                   <div className="flex items-center gap-3">
-                    <CreditCard size={18} className="text-violet-400" />
+                    <CreditCard size={18} className="text-[var(--accent)]" />
                     <div>
                       <p className="text-sm font-medium text-[var(--text-primary)]">Visa ending in 4242</p>
                       <p className="text-xs text-[var(--text-tertiary)]">Expires 12/2025</p>
                     </div>
                   </div>
-                  <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-400">Default</span>
+                  <span className="rounded-full bg-[var(--success-bg)] px-2 py-0.5 text-[10px] font-semibold text-[var(--text-success)]">Default</span>
                 </div>
-                <button className="mt-3 flex items-center gap-2 text-sm text-[var(--text-tertiary)] hover:text-violet-400 transition-colors duration-200">
+                <button className="mt-3 flex items-center gap-2 text-sm text-[var(--text-tertiary)] hover:text-[var(--accent)] transition-colors duration-200">
                   <Plus size={14} /> Add Payment Method
                 </button>
               </div>
@@ -404,7 +404,7 @@ export default function SettingsPage() {
                         <p className="text-sm font-medium text-[var(--text-primary)]">{b.month}</p>
                         <p className="text-xs text-[var(--text-tertiary)]">Pro Plan</p>
                       </div>
-                      <span className="text-sm font-bold text-emerald-400">{b.amount}</span>
+                      <span className="text-sm font-bold text-[var(--text-success)]">{b.amount}</span>
                     </div>
                   ))}
                 </div>
@@ -415,14 +415,14 @@ export default function SettingsPage() {
           {/* ─── Danger Zone Tab ─────────────────────── */}
           {activeTab === "danger" && (
             <div className="space-y-6 stagger-children">
-              <div className="rounded-2xl border border-red-500/20 bg-red-500/[0.03] p-6 backdrop-blur-xl">
-                <h3 className="text-sm font-semibold text-red-400 mb-2">Delete Account</h3>
+              <div className="rounded-2xl border border-[var(--danger-border)] bg-red-500/[0.03] p-6 backdrop-blur-xl">
+                <h3 className="text-sm font-semibold text-[var(--text-danger)] mb-2">Delete Account</h3>
                 <p className="text-xs text-[var(--text-tertiary)] mb-4">This action is irreversible. All data, orders, and settings will be permanently removed.</p>
                 <div className="flex gap-3">
-                  <input type="text" placeholder="Type account name to confirm" className="flex-1 rounded-xl border border-red-500/30 bg-[var(--hover-bg)] px-4 py-2.5 text-sm text-red-400 placeholder:text-red-400/40 outline-none focus:ring-1 focus:ring-red-500/20 transition-all duration-200" />
+                  <input type="text" placeholder="Type account name to confirm" className="flex-1 rounded-xl border border-red-500/30 bg-[var(--hover-bg)] px-4 py-2.5 text-sm text-[var(--text-danger)] placeholder:text-[var(--text-danger)]/40 outline-none focus:ring-1 focus:ring-red-500/20 transition-all duration-200" />
                   <button
                     onClick={handleDeleteAccount}
-                    className="rounded-xl bg-gradient-to-r from-red-500 to-rose-600 px-6 py-2.5 text-sm font-bold text-[var(--text-primary)] shadow-lg shadow-red-500/25 hover:shadow-xl hover:shadow-red-500/40 transition-all duration-200 flex items-center gap-2"
+                    className="rounded-xl bg-gradient-to-r from-[var(--danger)] to-[var(--danger-hover)] px-6 py-2.5 text-sm font-bold text-[var(--text-primary)] shadow-lg shadow-red-500/25 hover:shadow-xl hover:shadow-red-500/40 transition-all duration-200 flex items-center gap-2"
                   >
                     <Trash2 size={15} />
                     Delete Account
@@ -431,11 +431,11 @@ export default function SettingsPage() {
               </div>
 
               <div className="rounded-2xl border border-amber-500/20 bg-amber-500/[0.03] p-6 backdrop-blur-xl">
-                <h3 className="text-sm font-semibold text-amber-400 mb-2">Export & Download Data</h3>
+                <h3 className="text-sm font-semibold text-[var(--text-warning)] mb-2">Export & Download Data</h3>
                 <p className="text-xs text-[var(--text-tertiary)] mb-4">Download a copy of all your data including orders, customers, and settings.</p>
                 <button
                   onClick={handleExportData}
-                  className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-6 py-2.5 text-sm font-semibold text-amber-400 hover:bg-amber-500/20 transition-all duration-200 flex items-center gap-2"
+                  className="rounded-xl border border-amber-500/30 bg-[var(--warning-bg)] px-6 py-2.5 text-sm font-semibold text-[var(--text-warning)] hover:bg-amber-500/20 transition-all duration-200 flex items-center gap-2"
                 >
                   <Download size={15} />
                   Export All Data

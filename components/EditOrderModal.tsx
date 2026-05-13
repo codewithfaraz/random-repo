@@ -49,7 +49,7 @@ export function EditOrderModal({ order, onClose, onSave }: EditOrderModalProps) 
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[var(--modal-overlay)] backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       aria-labelledby="edit-order-title"
@@ -58,7 +58,7 @@ export function EditOrderModal({ order, onClose, onSave }: EditOrderModalProps) 
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="relative w-full max-w-lg rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-2xl shadow-black/60 backdrop-blur-xl">
+      <div className="relative w-full max-w-lg rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-2xl shadow-[var(--shadow-color)] backdrop-blur-xl">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <h2
@@ -100,7 +100,7 @@ export function EditOrderModal({ order, onClose, onSave }: EditOrderModalProps) 
               value={form.customer}
               onChange={(e) => setForm({ ...form, customer: e.target.value })}
               onClick={handleInputClick}
-              className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+              className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all focus:border-[var(--accent)]/50 focus:ring-1 focus:ring-violet-500/20"
               placeholder="Enter customer name"
               required
             />
@@ -116,7 +116,7 @@ export function EditOrderModal({ order, onClose, onSave }: EditOrderModalProps) 
               value={form.product}
               onChange={(e) => setForm({ ...form, product: e.target.value })}
               onClick={handleInputClick}
-              className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+              className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all focus:border-[var(--accent)]/50 focus:ring-1 focus:ring-violet-500/20"
               placeholder="Enter product name"
               required
             />
@@ -132,7 +132,7 @@ export function EditOrderModal({ order, onClose, onSave }: EditOrderModalProps) 
               value={form.amount}
               onChange={(e) => setForm({ ...form, amount: e.target.value })}
               onClick={handleInputClick}
-              className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+              className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all focus:border-[var(--accent)]/50 focus:ring-1 focus:ring-violet-500/20"
               placeholder="$0.00"
               required
             />
@@ -151,7 +151,7 @@ export function EditOrderModal({ order, onClose, onSave }: EditOrderModalProps) 
                   status: e.target.value as Order["status"],
                 })}
               onClick={handleInputClick}
-              className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition-all focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+              className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] outline-none transition-all focus:border-[var(--accent)]/50 focus:ring-1 focus:ring-violet-500/20"
             >
               <option value="pending">Pending</option>
               <option value="processing">Processing</option>
@@ -184,7 +184,7 @@ export function EditOrderModal({ order, onClose, onSave }: EditOrderModalProps) 
             </button>
             <button
               type="submit"
-              className="rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 px-6 py-2.5 text-sm font-bold text-[var(--text-primary)] shadow-lg shadow-violet-500/25 transition-all hover:shadow-xl hover:shadow-violet-500/40"
+              className="rounded-xl bg-gradient-to-r from-[var(--accent)] to-[var(--accent-hover)] px-6 py-2.5 text-sm font-bold text-[var(--text-primary)] shadow-lg shadow-[var(--accent)]/25 transition-all hover:shadow-xl hover:shadow-[var(--accent)]/40"
             >
               Save Changes
             </button>

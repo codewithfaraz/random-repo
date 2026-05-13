@@ -14,7 +14,7 @@ export function ThemeToggle() {
     >
       {/* Knob */}
       <div
-        className={`absolute flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white shadow-lg shadow-violet-500/25 transition-transform duration-300 ${
+        className={`absolute flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-[var(--accent)] to-[var(--accent-hover)] text-[var(--text-primary)] shadow-lg shadow-[var(--accent)]/25 transition-transform duration-300 ${
           theme === "light" ? "translate-x-5" : "translate-x-0"
         }`}
       >
@@ -30,7 +30,7 @@ export function ThemeToggle() {
         <Sun
           size={13}
           className={`transition-all duration-300 ${
-            theme === "light" ? "text-amber-400" : "text-[var(--text-tertiary)]"
+            theme === "light" ? "text-[var(--text-warning)]" : "text-[var(--text-tertiary)]"
           }`}
         />
       </div>
@@ -40,7 +40,7 @@ export function ThemeToggle() {
         <Moon
           size={13}
           className={`transition-all duration-300 ${
-            theme === "dark" ? "text-violet-400" : "text-[var(--text-tertiary)]"
+            theme === "dark" ? "text-[var(--accent)]" : "text-[var(--text-tertiary)]"
           }`}
         />
       </div>

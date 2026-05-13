@@ -22,10 +22,10 @@ export function MetricCard({
   description,
 }: MetricCardProps) {
   const isUp = changeType === "up";
-  const changeColor = isUp ? "text-emerald-400" : "text-red-400";
+  const changeColor = isUp ? "text-[var(--text-success)]" : "text-[var(--text-danger)]";
 
   return (
-    <div className="glass-strong rounded-2xl border border-[var(--border)]/[0.5] p-6 backdrop-blur-xl transition-all duration-300 hover:border-violet-500/30 hover:shadow-xl hover:shadow-violet-500/5 animate-fade-in-up">
+    <div className="glass-strong rounded-2xl border border-[var(--border)]/[0.5] p-6 backdrop-blur-xl transition-all duration-300 hover:border-[var(--accent)]/30 hover:shadow-xl hover:shadow-[var(--accent)]/5 animate-fade-in-up">
       {/* Glow effect */}
       <div
         className={`pointer-events-none absolute -top-20 -right-20 h-40 w-40 rounded-full bg-gradient-to-br ${gradient} opacity-10 blur-3xl`}
@@ -47,8 +47,8 @@ export function MetricCard({
         <span
           className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${
             isUp
-              ? "bg-emerald-500/10 text-emerald-400"
-              : "bg-red-500/10 text-red-400"
+              ? "bg-[var(--success-bg)] text-[var(--text-success)]"
+              : "bg-[var(--danger-bg)] text-[var(--text-danger)]"
           }`}
         >
           {isUp ? "↑" : "↓"} {change}
