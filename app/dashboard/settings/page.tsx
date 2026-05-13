@@ -1,656 +1,359 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState } from "react";
 import {
   Settings,
+  User,
+  Mail,
+  Lock,
+  Bell,
+  Moon,
+  Sun,
+  Shield,
+  LogOut,
   Save,
   RefreshCw,
-  Copy,
-  Bell,
-  Eye,
-  EyeOff,
-  Sun,
-  Moon,
-  MoonStar,
-  Shield,
-  Mail,
+  Github,
   Globe,
-  Lock,
-  Unlock,
-  Wifi,
-  Check,
-  X,
+  ChevronRight,
   CreditCard,
+  UserPlus,
+  Trash2,
 } from "lucide-react";
-import { useTheme } from "@/app/ThemeProvider";
-import { ThemeToggle } from "@/app/ThemeToggle";
 
 export default function SettingsPage() {
-  const { theme } = useTheme();
+  const [activeTab, setActiveTab] = useState("profile");
+  const [darkMode, setDarkMode] = useState(true);
+  const [emailNotifications, setEmailNotifications] = useState(true);
+  const [pushNotifications, setPushNotifications] = useState(false);
 
-  /* ── General Settings state ──────────────────────────── */
-  const [storeName, setStoreName] = useState("My Awesome Store");
-  const [email, setEmail] = useState("hello@store.com");
-  const [currency, setCurrency] = useState("USD");
-  const [timezone, setTimezone] = useState("UTC-5");
-
-  /* ── Notification Preferences state ──────────────────── */
-  const [emailNotifs, setEmailNotifs] = useState(true);
-  const [lowStock, setLowStock] = useState(true);
-  const [orderUpdates, setOrderUpdates] = useState(false);
-  const [marketing, setMarketing] = useState(false);
-  const [smsNotifs, setSmsNotifs] = useState(false);
-
-  /* ── Security state ──────────────────────────────────── */
-  const [currentPw, setCurrentPw] = useState("");
-  const [newPw, setNewPw] = useState("");
-  const [confirmPw, setConfirmPw] = useState("");
-  const [twoFactor, setTwoFactor] = useState(false);
-
-  /* ── API & Integrations state ────────────────────────── */
-  const [apiKey] = useState("sk_live_a1b2c3d4e5f6g7h8i9j0");
-  const [webhookUrl, setWebhookUrl] = useState("");
-  const [gaConnected, setGaConnected] = useState(false);
-  const [stripeConnected, setStripeConnected] = useState(false);
-
-  /* ── Toast notification system ────────────────────────── */
-  const [toast, setToast] = useState<{
-    message: string;
-    visible: boolean;
-    type?: "success" | "error" | "info";
-  } | null>(null);
-
-  const showToast = useCallback(
-    (message: string, type: "success" | "error" | "info" = "success") => {
-      setToast({ message, visible: true, type });
-      setTimeout(() => setToast(null), 3000);
-    },
-    []
-  );
-
-  const Toast = useMemo(
-    () =>
-      toast
-        ? () => (
-            <div
-              style={{ zIndex: 9999 }}
-              className="fixed bottom-6 right-6 transform rounded-xl border border-[var(--border)] bg-[var(--surface)] px-5 py-3 shadow-lg shadow-[var(--shadow-color)] transition-all animate-in fade-in slide-in-from-bottom-4"
-            >
-              <div className="flex items-center gap-2.5">
-                {toast.type === "success" ? (
-                  <Check size={16} className="text-emerald-400 flex-shrink-0" />
-                ) : toast.type === "error" ? (
-                  <X size={16} className="text-red-400 flex-shrink-0" />
-                ) : (
-                  <Bell size={16} className="text-blue-400 flex-shrink-0" />
-                )}
-                <p className="text-sm font-medium text-[var(--text-primary)]">
-                  {toast.message}
-                </p>
-                <button
-                  onClick={() => setToast(null)}
-                  className="ml-2 rounded-full p-0.5 text-[var(--text-tertiary)] hover:bg-[var(--hover-bg)] hover:text-[var(--text-primary)]"
-                >
-                  <X size={14} />
-                </button>
-              </div>
-            </div>
-          )
-        : null,
-    [toast]
-  );
-
-  /* ── Copy API key to clipboard ────────────────────────── */
-  const handleCopyApiKey = useCallback(() => {
-    navigator.clipboard
-      .writeText(apiKey)
-      .then(() => showToast("Copied!", "success"))
-      .catch(() => showToast("Failed to copy", "error"));
-  }, [apiKey, showToast]);
-
-  /* ── Save general settings ───────────────────────────── */
-  const handleSaveGeneral = useCallback(() => {
-    showToast("General settings saved!", "success");
-  }, [showToast]);
-
-  /* ── Save changes (main button) ──────────────────────── */
-  const handleSaveChanges = useCallback(() => {
-    if (newPw !== confirmPw) {
-      showToast("New password and confirmation do not match", "error");
-      return;
-    }
-    if (newPw && !currentPw) {
-      showToast("Please enter your current password", "error");
-      return;
-    }
-    showToast("Saved!", "success");
-  }, [currentPw, newPw, confirmPw, showToast]);
-
-  const themeName = theme === "dark" ? "Dark" : "Light";
+  const tabs = [
+    { id: "profile", label: "Profile", icon: <User size={16} /> },
+    { id: "account", label: "Account", icon: <Lock size={16} /> },
+    { id: "notifications", label: "Notifications", icon: <Bell size={16} /> },
+    { id: "billing", label: "Billing", icon: <CreditCard size={16} /> },
+    { id: "danger", label: "Danger Zone", icon: <Trash2 size={16} /> },
+  ];
 
   return (
     <div className="space-y-6">
-      {/* Toast */}
-      {Toast && Toast()}
-
-      {/* PageHeader */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      {/* Header */}
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">
-            Settings
-          </h1>
-          <p className="text-sm text-[var(--text-secondary)]">
-            Manage your store settings and integrations.
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={handleSaveChanges}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-2.5 text-sm font-medium text-[var(--text-secondary)] transition-all hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]"
-          >
-            <Save size={16} />
-            Save Changes
-          </button>
+          <h1 className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">Settings</h1>
+          <p className="text-sm text-[var(--text-tertiary)]">Manage your account preferences</p>
         </div>
       </div>
 
-      {/* Summary Stat Cards */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-        {[
-          {
-            label: "Active Integrations",
-            value: "3",
-            Icon: Wifi,
-            color: "text-violet-400",
-          },
-          {
-            label: "API Keys",
-            value: "1",
-            Icon: Lock,
-            color: "text-amber-400",
-          },
-          {
-            label: "Notifications Enabled",
-            value: "3",
-            Icon: Bell,
-            color: "text-emerald-400",
-          },
-          {
-            label: "Storage Used",
-            value: "4.2 GB",
-            Icon: Settings,
-            color: "text-sky-400",
-          },
-        ].map((stat) => {
-          const Icon = stat.Icon;
-          return (
-            <div
-              key={stat.label}
-              className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5"
-            >
-              <div className="flex items-center justify-between">
-                <p className="text-sm text-[var(--text-secondary)]">
-                  {stat.label}
-                </p>
-                <div className="rounded-lg bg-[var(--hover-bg)] p-2">
-                  <Icon
-                    size={18}
-                    className={`${stat.color} flex-shrink-0`}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+        {/* Sidebar Tabs */}
+        <nav className="lg:col-span-3">
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)]/[0.03] p-2">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all ${
+                  activeTab === tab.id
+                    ? "bg-violet-500/10 text-violet-400 shadow-inner shadow-violet-500/10"
+                    : "text-[var(--text-secondary)] hover:bg-[var(--hover-bg)] hover:text-[var(--text-primary)]"
+                }`}
+              >
+                {tab.icon}
+                {tab.label}
+                {activeTab === tab.id && (
+                  <ChevronRight size={14} className="ml-auto" />
+                )}
+              </button>
+            ))}
+          </div>
+        </nav>
+
+        {/* Tab Content */}
+        <div className="lg:col-span-9">
+          {/* ─── Profile Tab ─────────────────────────── */}
+          {activeTab === "profile" && (
+            <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)]/[0.03] p-6 backdrop-blur-xl">
+              <h2 className="mb-6 text-lg font-bold tracking-tight text-[var(--text-primary)]">Profile Information</h2>
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                <div>
+                  <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">Full Name</label>
+                  <input
+                    type="text"
+                    defaultValue="Admin User"
+                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+                  />
+                </div>
+                <div>
+                  <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">Display Name</label>
+                  <input
+                    type="text"
+                    defaultValue="HermesAdmin"
+                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">Bio</label>
+                  <textarea
+                    rows={3}
+                    defaultValue="E-commerce store administrator managing products, orders, and customer relationships."
+                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20 resize-none"
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">Role</label>
+                  <input
+                    type="text"
+                    defaultValue="Super Admin"
+                    disabled
+                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)]/50 px-4 py-3 text-sm text-[var(--text-tertiary)] outline-none"
                   />
                 </div>
               </div>
-              <p className="mt-2 text-2xl font-bold text-[var(--text-primary)]">
-                {stat.value}
-              </p>
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        {/* General Settings */}
-        <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6">
-          <div className="mb-6 flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--hover-bg)]">
-              <Settings size={18} className="text-[var(--text-primary)]" />
-            </div>
-            <h3 className="text-sm font-semibold text-[var(--text-primary)]">
-              General Settings
-            </h3>
-          </div>
-          <div className="space-y-4">
-            <div>
-              <label className="mb-1 block text-xs font-medium text-[var(--text-tertiary)]">
-                Store Name
-              </label>
-              <input
-                type="text"
-                value={storeName}
-                onChange={(e) => setStoreName(e.target.value)}
-                className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-2.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-tertiary)] outline-none transition-all focus:border-[var(--text-tertiary)] focus:ring-1 focus:ring-[var(--text-tertiary)]/20"
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-xs font-medium text-[var(--text-tertiary)]">
-                Email Address
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-2.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-tertiary)] outline-none transition-all focus:border-[var(--text-tertiary)] focus:ring-1 focus:ring-[var(--text-tertiary)]/20"
-              />
-            </div>
-            <div>
-              <label className="mb-1 block text-xs font-medium text-[var(--text-tertiary)]">
-                Currency
-              </label>
-              <select
-                value={currency}
-                onChange={(e) => setCurrency(e.target.value)}
-                className="w-full appearance-none rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-2.5 text-sm text-[var(--text-secondary)] outline-none transition-all focus:border-[var(--text-tertiary)] focus:ring-1 focus:ring-[var(--text-tertiary)]/20"
-              >
-                <option value="USD">USD - US Dollar</option>
-                <option value="EUR">EUR - Euro</option>
-                <option value="GBP">GBP - British Pound</option>
-                <option value="JPY">JPY - Japanese Yen</option>
-              </select>
-            </div>
-            <div>
-              <label className="mb-1 block text-xs font-medium text-[var(--text-tertiary)]">
-                Timezone
-              </label>
-              <select
-                value={timezone}
-                onChange={(e) => setTimezone(e.target.value)}
-                className="w-full appearance-none rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-2.5 text-sm text-[var(--text-secondary)] outline-none transition-all focus:border-[var(--text-tertiary)] focus:ring-1 focus:ring-[var(--text-tertiary)]/20"
-              >
-                <option value="UTC-5">UTC-5 (Eastern Time)</option>
-                <option value="UTC-6">UTC-6 (Central Time)</option>
-                <option value="UTC-7">UTC-7 (Mountain Time)</option>
-                <option value="UTC-8">UTC-8 (Pacific Time)</option>
-                <option value="UTC+0">UTC+0 (GMT)</option>
-              </select>
-            </div>
-          </div>
-          <div className="mt-6">
-            <button
-              onClick={handleSaveGeneral}
-              className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-2.5 text-sm font-medium text-[var(--text-secondary)] transition-all hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]"
-            >
-              <Save size={14} />
-              Save General Settings
-            </button>
-          </div>
-        </div>
-
-        {/* Notification Preferences */}
-        <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6">
-          <div className="mb-6 flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--hover-bg)]">
-              <Bell size={18} className="text-[var(--text-primary)]" />
-            </div>
-            <h3 className="text-sm font-semibold text-[var(--text-primary)]">
-              Notification Preferences
-            </h3>
-          </div>
-          <div className="space-y-4">
-            <ToggleSetting
-              icon={<Mail size={18} />}
-              label="Email Notifications"
-              description="Receive email alerts for store activity"
-              checked={emailNotifs}
-              onToggle={() => setEmailNotifs(!emailNotifs)}
-            />
-            <ToggleSetting
-              icon={<Eye size={18} />}
-              label="Low Stock Alerts"
-              description="Get notified when products run low"
-              checked={lowStock}
-              onToggle={() => setLowStock(!lowStock)}
-            />
-            <ToggleSetting
-              icon={<RefreshCw size={18} />}
-              label="Order Updates"
-              description="Receive order status change notifications"
-              checked={orderUpdates}
-              onToggle={() => setOrderUpdates(!orderUpdates)}
-            />
-            <ToggleSetting
-              icon={<Globe size={18} />}
-              label="Marketing Emails"
-              description="Receive promotional offers and campaigns"
-              checked={marketing}
-              onToggle={() => setMarketing(!marketing)}
-            />
-            <ToggleSetting
-              icon={<MoonStar size={18} />}
-              label="SMS Notifications"
-              description="Receive SMS alerts for important events"
-              checked={smsNotifs}
-              onToggle={() => setSmsNotifs(!smsNotifs)}
-            />
-          </div>
-        </div>
-
-        {/* Appearance */}
-        <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6">
-          <div className="mb-6 flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--hover-bg)]">
-              <Sun size={18} className="text-[var(--text-primary)]" />
-            </div>
-            <h3 className="text-sm font-semibold text-[var(--text-primary)]">
-              Appearance
-            </h3>
-          </div>
-          <div className="space-y-4">
-            <div>
-              <label className="mb-2 block text-xs font-medium text-[var(--text-tertiary)]">
-                Current Theme
-              </label>
-              <div className="flex items-center gap-3">
-                <ThemeToggle />
-                <span className="text-sm text-[var(--text-secondary)]">
-                  {themeName} mode
-                </span>
-              </div>
-            </div>
-            <div>
-              <label className="mb-1 block text-xs font-medium text-[var(--text-tertiary)]">
-                Font Size
-              </label>
-              <select className="w-full appearance-none rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-2.5 text-sm text-[var(--text-secondary)] outline-none transition-all focus:border-[var(--text-tertiary)] focus:ring-1 focus:ring-[var(--text-tertiary)]/20">
-                <option>Small (14px)</option>
-                <option selected>Medium (16px)</option>
-                <option>Large (18px)</option>
-                <option>Extra Large (20px)</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* Security */}
-        <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6">
-          <div className="mb-6 flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--hover-bg)]">
-              <Shield size={18} className="text-[var(--text-primary)]" />
-            </div>
-            <h3 className="text-sm font-semibold text-[var(--text-primary)]">
-              Security
-            </h3>
-          </div>
-          <div className="space-y-4">
-            <div>
-              <label className="mb-1 block text-xs font-medium text-[var(--text-tertiary)]">
-                Current Password
-              </label>
-              <div className="relative">
-                <input
-                  type="password"
-                  value={currentPw}
-                  onChange={(e) => setCurrentPw(e.target.value)}
-                  placeholder="Enter current password"
-                  className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-2.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-tertiary)] outline-none transition-all focus:border-[var(--text-tertiary)] focus:ring-1 focus:ring-[var(--text-tertiary)]/20"
-                />
-                <Lock
-                  size={16}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]"
-                />
-              </div>
-            </div>
-            <div>
-              <label className="mb-1 block text-xs font-medium text-[var(--text-tertiary)]">
-                New Password
-              </label>
-              <div className="relative">
-                <input
-                  type="password"
-                  value={newPw}
-                  onChange={(e) => setNewPw(e.target.value)}
-                  placeholder="Enter new password"
-                  className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-2.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-tertiary)] outline-none transition-all focus:border-[var(--text-tertiary)] focus:ring-1 focus:ring-[var(--text-tertiary)]/20"
-                />
-                <Lock
-                  size={16}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]"
-                />
-              </div>
-            </div>
-            <div>
-              <label className="mb-1 block text-xs font-medium text-[var(--text-tertiary)]">
-                Confirm New Password
-              </label>
-              <div className="relative">
-                <input
-                  type="password"
-                  value={confirmPw}
-                  onChange={(e) => setConfirmPw(e.target.value)}
-                  placeholder="Confirm new password"
-                  className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-2.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-tertiary)] outline-none transition-all focus:border-[var(--text-tertiary)] focus:ring-1 focus:ring-[var(--text-tertiary)]/20"
-                />
-                <Lock
-                  size={16}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]"
-                />
-              </div>
-            </div>
-            <div className="flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] p-4">
-              <div className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--background)]">
-                  <Unlock size={16} className="text-[var(--text-primary)]" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-[var(--text-primary)]">
-                    Two-Factor Authentication
-                  </p>
-                  <p className="text-xs text-[var(--text-tertiary)]">
-                    Add an extra layer of security to your account
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => setTwoFactor(!twoFactor)}
-                className={`relative inline-flex h-5 w-9 items-center rounded-full border border-[var(--border)] transition-colors ${
-                  twoFactor
-                    ? "bg-violet-500 border-violet-500"
-                    : "bg-[var(--background)] border-[var(--border)]"
-                }`}
-                role="switch"
-                aria-checked={twoFactor}
-                aria-label="Toggle two-factor authentication"
-              >
-                <span
-                  className={`inline-block h-4 w-4 rounded-full bg-white shadow-md transition-transform duration-200 ${
-                    twoFactor ? "translate-x-4" : "translate-x-0.5"
-                  }`}
-                />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* API & Integrations */}
-        <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6">
-          <div className="mb-6 flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--hover-bg)]">
-              <Shield size={18} className="text-[var(--text-primary)]" />
-            </div>
-            <h3 className="text-sm font-semibold text-[var(--text-primary)]">
-              API &amp; Integrations
-            </h3>
-          </div>
-          <div className="space-y-4">
-            <div>
-              <label className="mb-1 block text-xs font-medium text-[var(--text-tertiary)]">
-                API Key
-              </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={apiKey}
-                  readOnly
-                  className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none"
-                />
-                <button
-                  onClick={handleCopyApiKey}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-[var(--text-tertiary)] transition-all hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]"
-                  aria-label="Copy API key"
-                >
-                  <Copy size={16} />
+              <div className="mt-6 flex justify-end gap-3">
+                <button className="rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-6 py-2.5 text-sm font-medium text-[var(--text-secondary)] transition-all hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]">
+                  Reset
+                </button>
+                <button className="rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-violet-500/25 transition-all hover:shadow-xl hover:shadow-violet-500/40 flex items-center gap-2">
+                  <Save size={15} />
+                  Save Changes
                 </button>
               </div>
             </div>
-            <div>
-              <label className="mb-1 block text-xs font-medium text-[var(--text-tertiary)]">
-                Webhook URL
-              </label>
-              <div className="relative">
-                <input
-                  type="url"
-                  value={webhookUrl}
-                  onChange={(e) => setWebhookUrl(e.target.value)}
-                  placeholder="https://example.com/webhook"
-                  className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-2.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-tertiary)] outline-none transition-all focus:border-[var(--text-tertiary)] focus:ring-1 focus:ring-[var(--text-tertiary)]/20"
-                />
-                <Globe
-                  size={16}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]"
-                />
-              </div>
-            </div>
-            <div className="flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] p-3">
-              <div className="flex items-center gap-3">
-                <Globe size={18} className="text-[var(--text-tertiary)]" />
-                <div>
-                  <p className="text-sm font-medium text-[var(--text-primary)]">
-                    Google Analytics
-                  </p>
-                  <p className="text-xs text-[var(--text-tertiary)]">
-                    Track store traffic and conversions
-                  </p>
+          )}
+
+          {/* ─── Account Tab ─────────────────────────── */}
+          {activeTab === "account" && (
+            <div className="space-y-6">
+              {/* Change Password */}
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)]/[0.03] p-6 backdrop-blur-xl">
+                <h2 className="mb-6 flex items-center gap-2 text-lg font-bold tracking-tight text-[var(--text-primary)]">
+                  <Lock size={20} className="text-violet-400" />
+                  Change Password
+                </h2>
+                <div className="space-y-4">
+                  <div>
+                    <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">Current Password</label>
+                    <input type="password" placeholder="••••••••" className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20" />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">New Password</label>
+                    <input type="password" placeholder="••••••••" className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20" />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">Confirm New Password</label>
+                    <input type="password" placeholder="••••••••" className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20" />
+                  </div>
+                </div>
+                <div className="mt-6 flex justify-end">
+                  <button className="rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-violet-500/25 transition-all hover:shadow-xl hover:shadow-violet-500/40 flex items-center gap-2">
+                    <Lock size={15} />
+                    Update Password
+                  </button>
                 </div>
               </div>
-              <button
-                onClick={() => {
-                  setGaConnected(!gaConnected);
-                  showToast(
-                    !gaConnected
-                      ? "Google Analytics connected"
-                      : "Google Analytics disconnected",
-                    "info"
-                  );
-                }}
-                className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-all hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)] ${
-                  gaConnected
-                    ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
-                    : "border-[var(--border)] bg-[var(--background)] text-[var(--text-secondary)]"
-                }`}
-              >
-                {gaConnected ? "Connected" : "Connect"}
-              </button>
-            </div>
-            <div className="flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] p-3">
-              <div className="flex items-center gap-3">
-                <CreditCard size={18} className="text-[var(--text-tertiary)]" />
-                <div>
-                  <p className="text-sm font-medium text-[var(--text-primary)]">
-                    Stripe
-                  </p>
-                  <p className="text-xs text-[var(--text-tertiary)]">
-                    Accept payments online
-                  </p>
+
+              {/* 2FA */}
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)]/[0.03] p-6 backdrop-blur-xl">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-sm font-semibold text-[var(--text-primary)]">Two-Factor Authentication</h3>
+                    <p className="text-xs text-[var(--text-tertiary)] mt-1">Add an extra layer of security to your account</p>
+                  </div>
+                  <button
+                    onClick={() => setDarkMode(!darkMode)}
+                    className={`relative flex h-6 w-12 items-center rounded-full border transition-colors ${
+                      darkMode ? "border-violet-500 bg-violet-500" : "border-[var(--border)] bg-[var(--hover-bg)]"
+                    }`}
+                  >
+                    <div
+                      className={`absolute h-4 w-4 rounded-full bg-white shadow-md transition-transform ${darkMode ? "translate-x-6" : "translate-x-0.5"}`}
+                    />
+                  </button>
                 </div>
               </div>
-              <button
-                onClick={() => {
-                  setStripeConnected(!stripeConnected);
-                  showToast(
-                    !stripeConnected
-                      ? "Stripe connected successfully"
-                      : "Stripe disconnected",
-                    "info"
-                  );
-                }}
-                className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-all hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)] ${
-                  stripeConnected
-                    ? "border-violet-500/30 bg-violet-500/10 text-violet-400"
-                    : "border-[var(--border)] bg-[var(--background)] text-[var(--text-secondary)]"
-                }`}
-              >
-                {stripeConnected ? "Connected" : "Connect"}
-              </button>
+
+              {/* Connected Accounts */}
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)]/[0.03] p-6 backdrop-blur-xl">
+                <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-4">Connected Accounts</h3>
+                <div className="space-y-3">
+                  {[
+                    { icon: <Mail size={16} />, label: "Email", value: "admin@store.com", connected: true },
+                    { icon: <Github size={16} />, label: "GitHub", value: "Connected", connected: true },
+                    { icon: <Globe size={16} />, label: "Google", value: "Not connected", connected: false },
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] p-4">
+                      <div className="flex items-center gap-3">
+                        <span className="text-[var(--text-tertiary)]">{item.icon}</span>
+                        <div>
+                          <p className="text-sm font-medium text-[var(--text-primary)]">{item.label}</p>
+                          <p className="text-xs text-[var(--text-tertiary)]">{item.value}</p>
+                        </div>
+                      </div>
+                      {item.connected ? (
+                        <button className="rounded-lg border border-red-500/30 px-3 py-1.5 text-xs font-semibold text-red-400 hover:bg-red-500/10 transition-all">Disconnect</button>
+                      ) : (
+                        <button className="rounded-lg border border-violet-500/30 px-3 py-1.5 text-xs font-semibold text-violet-400 hover:bg-violet-500/10 transition-all">Connect</button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
+          )}
+
+          {/* ─── Notifications Tab ─────────────────── */}
+          {activeTab === "notifications" && (
+            <div className="space-y-6">
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)]/[0.03] p-6 backdrop-blur-xl">
+                <h3 className="mb-4 text-sm font-semibold text-[var(--text-primary)]">Notification Preferences</h3>
+                {[
+                  { label: "Email Notifications", desc: "Receive updates via email", checked: emailNotifications, onChange: setEmailNotifications },
+                  { label: "Push Notifications", desc: "Get notified in the browser", checked: pushNotifications, onChange: setPushNotifications },
+                ].map((n) => (
+                  <div key={n.label} className="mb-4 flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] p-4">
+                    <div>
+                      <p className="text-sm font-medium text-[var(--text-primary)]">{n.label}</p>
+                      <p className="text-xs text-[var(--text-tertiary)]">{n.desc}</p>
+                    </div>
+                    <button
+                      onClick={() => n.onChange(!n.checked)}
+                      className={`relative flex h-6 w-12 items-center rounded-full border transition-colors ${
+                        n.checked ? "border-violet-500 bg-violet-500" : "border-[var(--border)] bg-[var(--hover-bg-strong)]"
+                      }`}
+                    >
+                      <div
+                        className={`absolute h-4 w-4 rounded-full bg-white shadow-md transition-transform ${n.checked ? "translate-x-6" : "translate-x-0.5"}`}
+                      />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {/* Notification Log */}
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)]/[0.03] p-6 backdrop-blur-xl">
+                <h3 className="mb-4 text-sm font-semibold text-[var(--text-primary)]">Recent Notifications</h3>
+                {[
+                  { title: "New Order #ORD-7821", desc: "Sarah Mitchell purchased Premium Headphones", time: "2 min ago", icon: <ShoppingBag size={16} /> },
+                  { title: "Product Low Stock", desc: "USB-C Hub is running low (3 remaining)", time: "15 min ago", icon: <Bell size={16} /> },
+                  { title: "Monthly Report Ready", desc: "April sales report is available for download", time: "1 hr ago", icon: <Mail size={16} /> },
+                ].map((n, i) => (
+                  <div key={i} className="flex items-start gap-3 rounded-lg p-3 transition-colors hover:bg-white/[0.02]">
+                    <span className="mt-0.5 shrink-0 text-[var(--text-tertiary)]">{n.icon}</span>
+                    <div>
+                      <p className="text-sm text-[var(--text-primary)]">{n.title}</p>
+                      <p className="text-xs text-[var(--text-tertiary)]">{n.desc}</p>
+                    </div>
+                    <span className="ml-auto text-[10px] text-[var(--text-tertiary)] shrink-0">{n.time}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ─── Billing Tab ────────────────────────── */}
+          {activeTab === "billing" && (
+            <div className="space-y-6">
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)]/[0.03] p-6 backdrop-blur-xl">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-sm font-semibold text-[var(--text-primary)]">Current Plan</h3>
+                    <p className="text-xs text-[var(--text-tertiary)] mt-1">Pro Plan — $29/month</p>
+                  </div>
+                  <button className="rounded-xl border border-violet-500/30 px-4 py-2 text-xs font-semibold text-violet-400 hover:bg-violet-500/10 transition-all">
+                    Manage Plan
+                  </button>
+                </div>
+                <div className="mt-4 grid grid-cols-2 gap-4 rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] p-4">
+                  <div>
+                    <p className="text-[10px] text-[var(--text-tertiary)] uppercase">Current Period</p>
+                    <p className="text-sm font-medium text-[var(--text-primary)]">Apr 1 – Apr 30, 2025</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-[var(--text-tertiary)] uppercase">Next Billing</p>
+                    <p className="text-sm font-medium text-[var(--text-primary)]">May 1, 2025</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Payment Method */}
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)]/[0.03] p-6 backdrop-blur-xl">
+                <h3 className="mb-4 text-sm font-semibold text-[var(--text-primary)]">Payment Methods</h3>
+                <div className="flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] p-4">
+                  <div className="flex items-center gap-3">
+                    <CreditCard size={18} className="text-violet-400" />
+                    <div>
+                      <p className="text-sm font-medium text-[var(--text-primary)]">Visa ending in 4242</p>
+                      <p className="text-xs text-[var(--text-tertiary)]">Expires 12/2025</p>
+                    </div>
+                  </div>
+                  <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-400">Default</span>
+                </div>
+                <button className="mt-3 flex items-center gap-2 text-sm text-[var(--text-tertiary)] hover:text-violet-400 transition-colors">
+                  <Plus size={14} /> Add Payment Method
+                </button>
+              </div>
+
+              {/* Billing History */}
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)]/[0.03] p-6 backdrop-blur-xl">
+                <h3 className="mb-4 text-sm font-semibold text-[var(--text-primary)]">Billing History</h3>
+                <div className="space-y-2">
+                  {[
+                    { month: "March 2025", amount: "$29.00", status: "Paid" },
+                    { month: "February 2025", amount: "$29.00", status: "Paid" },
+                    { month: "January 2025", amount: "$29.00", status: "Paid" },
+                  ].map((b, i) => (
+                    <div key={i} className="flex items-center justify-between rounded-lg p-3 transition-colors hover:bg-white/[0.02]">
+                      <div>
+                        <p className="text-sm font-medium text-[var(--text-primary)]">{b.month}</p>
+                        <p className="text-xs text-[var(--text-tertiary)]">Pro Plan</p>
+                      </div>
+                      <span className="text-sm font-bold text-emerald-400">{b.amount}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ─── Danger Zone Tab ─────────────────────── */}
+          {activeTab === "danger" && (
+            <div className="space-y-6">
+              <div className="rounded-2xl border border-red-500/20 bg-red-500/[0.03] p-6 backdrop-blur-xl">
+                <h3 className="text-sm font-semibold text-red-400 mb-2">Delete Account</h3>
+                <p className="text-xs text-[var(--text-tertiary)] mb-4">This action is irreversible. All data, orders, and settings will be permanently removed.</p>
+                <div className="flex gap-3">
+                  <input type="text" placeholder="Type account name to confirm" className="flex-1 rounded-xl border border-red-500/30 bg-[var(--hover-bg)] px-4 py-2.5 text-sm text-red-400 placeholder:text-red-400/40 outline-none focus:ring-1 focus:ring-red-500/20" />
+                  <button className="rounded-xl bg-gradient-to-r from-red-500 to-rose-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-red-500/25 hover:shadow-xl hover:shadow-red-500/40 transition-all flex items-center gap-2">
+                    <Trash2 size={15} />
+                    Delete Account
+                  </button>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-amber-500/20 bg-amber-500/[0.03] p-6 backdrop-blur-xl">
+                <h3 className="text-sm font-semibold text-amber-400 mb-2">Export & Download Data</h3>
+                <p className="text-xs text-[var(--text-tertiary)] mb-4">Download a copy of all your data including orders, customers, and settings.</p>
+                <button className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-6 py-2.5 text-sm font-semibold text-amber-400 hover:bg-amber-500/20 transition-all flex items-center gap-2">
+                  <DownloadIcon />
+                  Export All Data
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-/* ── ToggleSetting sub-component ──────────────────────── */
-function ToggleSetting({
-  icon,
-  label,
-  description,
-  checked,
-  onToggle,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  description: string;
-  checked: boolean;
-  onToggle: () => void;
-}) {
+// ─── Download SVG Icon ───────────────────────────────
+function DownloadIcon() {
   return (
-    <div className="flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] p-4">
-      <div className="flex items-center gap-3">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--background)]">
-          {icon}
-        </div>
-        <div>
-          <p className="text-sm font-medium text-[var(--text-primary)]">
-            {label}
-          </p>
-          <p className="text-xs text-[var(--text-tertiary)]">{description}</p>
-        </div>
-      </div>
-      <button
-        onClick={onToggle}
-        className={`relative inline-flex h-5 w-9 items-center rounded-full border border-[var(--border)] transition-colors ${
-          checked
-            ? "bg-violet-500 border-violet-500"
-            : "bg-[var(--background)] border-[var(--border)]"
-        }`}
-        role="switch"
-        aria-checked={checked}
-        aria-label={label}
-      >
-        <span
-          className={`inline-block h-4 w-4 rounded-full bg-white shadow-md transition-transform duration-200 ${
-            checked ? "translate-x-4" : "translate-x-0.5"
-          }`}
-        />
-      </button>
-    </div>
-  );
-}
-
-/* ── CreditCard icon (Stripe) — inline SVG so no extra import ── */
-function CreditCardIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <rect width="20" height="14" x="2" y="5" rx="2" />
-      <line x1="2" x2="22" y1="10" y2="10" />
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="15" x2="12" y2="3" />
     </svg>
   );
 }

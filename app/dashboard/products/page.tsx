@@ -1,1156 +1,519 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo } from "react";
+import Link from "next/link";
 import {
+  ShoppingBag,
   Search,
-  Plus,
-  Filter,
-  ChevronDown,
-  ArrowUpDown,
-  Eye,
-  Edit,
-  Trash2,
-  RefreshCw,
-  Package,
-  Copy,
+  ChevronLeft,
+  ChevronRight,
+  Star,
+  ArrowRight,
+  SlidersHorizontal,
   X,
-  AlertCircle,
+  Plus,
+  Minus,
+  Trash2,
+  Heart,
 } from "lucide-react";
+import { Carousel } from "@/components/Carousel";
 
-/* ── Types ──────────────────────────────────────────────── */
-interface Product {
-  id: string;
-  name: string;
-  sku: string;
-  price: number;
-  stock: number;
-  category: string;
-  status: "active" | "inactive" | "out-of-stock";
-  description: string;
-}
-
-type SortOption = "name-asc" | "name-desc" | "price-asc" | "price-desc" | "stock-asc";
-type StatusFilter = "all" | "active" | "inactive" | "out-of-stock";
-type CategoryFilter = "all" | "Electronics" | "Accessories" | "Audio" | "Displays" | "Lighting";
-
-/* ── Sample data (15 rows covering all categories & stock levels) ─ */
-const initialProducts: Product[] = [
-  {
-    id: "PRD-001",
-    name: "Wireless Headphones",
-    sku: "WH-2024-BLK",
-    price: 149.99,
-    stock: 34,
-    category: "Audio",
-    status: "active",
-    description: "Premium over-ear wireless headphones with ANC.",
-  },
-  {
-    id: "PRD-002",
-    name: "Mechanical Keyboard",
-    sku: "MK-7800-RED",
-    price: 89.0,
-    stock: 0,
-    category: "Electronics",
-    status: "out-of-stock",
-    description: "RGB mechanical keyboard with Cherry MX switches.",
-  },
-  {
-    id: "PRD-003",
-    name: "USB-C Hub",
-    sku: "UCH-1042-SLV",
-    price: 45.5,
-    stock: 128,
-    category: "Accessories",
-    status: "active",
-    description: "7-in-1 USB-C hub with HDMI, USB 3.0, and SD card.",
-  },
-  {
-    id: "PRD-004",
-    name: "LED Monitor 27\"",
-    sku: "LM-2700-WHT",
-    price: 329.99,
-    stock: 12,
-    category: "Displays",
-    status: "active",
-    description: "27-inch 4K IPS monitor with 144Hz refresh rate.",
-  },
-  {
-    id: "PRD-005",
-    name: "Bluetooth Speaker",
-    sku: "BS-550-BLU",
-    price: 59.99,
-    stock: 0,
-    category: "Audio",
-    status: "out-of-stock",
-    description: "Portable waterproof Bluetooth speaker with 360° sound.",
-  },
-  {
-    id: "PRD-006",
-    name: "Webcam HD",
-    sku: "WC-1080-BLK",
-    price: 79.0,
-    stock: 56,
-    category: "Electronics",
-    status: "active",
-    description: "1080p webcam with built-in noise-cancelling mic.",
-  },
-  {
-    id: "PRD-007",
-    name: "Laptop Stand",
-    sku: "LS-ADJ-ALU",
-    price: 34.99,
-    stock: 200,
-    category: "Accessories",
-    status: "active",
-    description: "Adjustable ergonomic aluminum laptop stand.",
-  },
-  {
-    id: "PRD-008",
-    name: "Desk Lamp",
-    sku: "DL-TOUCH-WRM",
-    price: 42.0,
-    stock: 0,
-    category: "Lighting",
-    status: "out-of-stock",
-    description: "Touch-controlled LED desk lamp with warm light.",
-  },
-  {
-    id: "PRD-009",
-    name: "Mouse Pad XL",
-    sku: "MP-XL-RGB",
-    price: 24.99,
-    stock: 87,
-    category: "Accessories",
-    status: "inactive",
-    description: "Extended RGB mouse pad with stitched edges.",
-  },
-  {
-    id: "PRD-010",
-    name: "Cable Management Kit",
-    sku: "CMK-ORG-15",
-    price: 19.99,
-    stock: 144,
-    category: "Accessories",
-    status: "active",
-    description: "Complete cable management solution with clips and sleeves.",
-  },
-  {
-    id: "PRD-011",
-    name: "USB-C Charger 65W",
-    sku: "UCC-65W-WHT",
-    price: 39.99,
-    stock: 72,
-    category: "Electronics",
-    status: "active",
-    description: "GaN fast charger with USB-C Power Delivery.",
-  },
-  {
-    id: "PRD-012",
-    name: "Monitor Light Bar",
-    sku: "MLB-PRO-DRM",
-    price: 69.99,
-    stock: 18,
-    category: "Lighting",
-    status: "active",
-    description: "Asymmetric monitor light bar with adjustable color temperature.",
-  },
-  {
-    id: "PRD-013",
-    name: "Laptop Sleeve",
-    sku: "LSV-15-NYL",
-    price: 29.99,
-    stock: 95,
-    category: "Accessories",
-    status: "active",
-    description: "Water-resistant neoprene laptop sleeve for 15\" laptops.",
-  },
-  {
-    id: "PRD-014",
-    name: "Noise Cancelling Earbuds",
-    sku: "NCE-BUD-24",
-    price: 129.99,
-    stock: 5,
-    category: "Audio",
-    status: "active",
-    description: "True wireless earbuds with active noise cancellation.",
-  },
-  {
-    id: "PRD-015",
-    name: "Standing Desk Converter",
-    sku: "SDC-ADJ-48",
-    price: 199.99,
-    stock: 0,
-    category: "Electronics",
-    status: "inactive",
-    description: "Height-adjustable standing desk converter with gas spring.",
-  },
+// ─── Product Data ───────────────────────────────────────
+const allProducts = [
+  { id: 1, name: "Wireless Headphones Pro", price: 149.99, image: "🎧", category: "Electronics", rating: 4.8, reviews: 342, inStock: true },
+  { id: 2, name: "Smart Watch Ultra", price: 399.00, image: "⌚", category: "Electronics", rating: 4.9, reviews: 512, inStock: true },
+  { id: 3, name: "Laptop Stand Ergonomic", price: 79.99, image: "💻", category: "Accessories", rating: 4.6, reviews: 567, inStock: true },
+  { id: 4, name: "Mechanical Keyboard RGB", price: 129.99, image: "⌨️", category: "Electronics", rating: 4.7, reviews: 189, inStock: false },
+  { id: 5, name: "USB-C Hub 8-in-1", price: 45.50, image: "🔌", category: "Accessories", rating: 4.5, reviews: 401, inStock: true },
+  { id: 6, name: "Noise Cancelling Earbuds", price: 199.00, image: "🎵", category: "Electronics", rating: 4.8, reviews: 276, inStock: true },
+  { id: 7, name: "4K Webcam", price: 89.99, image: "📷", category: "Electronics", rating: 4.3, reviews: 134, inStock: true },
+  { id: 8, name: "Canvas Tote Bag", price: 34.99, image: "👜", category: "Fashion", rating: 4.1, reviews: 89, inStock: true },
+  { id: 9, name: "Wireless Mouse", price: 39.99, image: "🖱️", category: "Accessories", rating: 4.4, reviews: 256, inStock: true },
+  { id: 10, name: "Desk Lamp LED", price: 54.99, image: "💡", category: "Home", rating: 4.6, reviews: 178, inStock: true },
+  { id: 11, name: "Running Shoes Pro", price: 124.99, image: "👟", category: "Sports", rating: 4.7, reviews: 345, inStock: true },
+  { id: 12, name: "Ceramic Water Bottle", price: 24.99, image: "🍶", category: "Home", rating: 4.5, reviews: 412, inStock: true },
 ];
 
-/* ── Status config ──────────────────────────────────────── */
-const statusConfig: Record<
-  Product["status"],
-  { label: string; color: string; bg: string }
-> = {
-  active: {
-    label: "Active",
-    color: "text-emerald-400",
-    bg: "bg-emerald-400/10",
-  },
-  inactive: {
-    label: "Inactive",
-    color: "text-amber-400",
-    bg: "bg-amber-400/10",
-  },
-  "out-of-stock": {
-    label: "Out of Stock",
-    color: "text-red-400",
-    bg: "bg-red-400/10",
-  },
-};
-
-const categoryOptions: CategoryFilter[] = [
-  "all",
-  "Electronics",
-  "Accessories",
-  "Audio",
-  "Displays",
-  "Lighting",
+const categories = ["All", "Electronics", "Accessories", "Fashion", "Home", "Sports"];
+const sortOptions = [
+  { value: "featured", label: "Featured" },
+  { value: "price-asc", label: "Price: Low to High" },
+  { value: "price-desc", label: "Price: High to Low" },
+  { value: "rating", label: "Highest Rated" },
+  { value: "reviews", label: "Most Reviews" },
 ];
 
-/* ── Toast notification ─────────────────────────────────── */
-function useToast() {
-  const [toast, setToast] = useState<{
-    message: string;
-    visible: boolean;
-  } | null>(null);
+// ─── Product Card ───────────────────────────────────────
+function ProductCard({ product, onAddToCart }: { product: typeof allProducts[0]; onAddToCart: (p: typeof allProducts[0]) => void }) {
+  const [isHovered, setIsHovered] = useState(false);
+  const [isWishlisted, setIsWishlisted] = useState(false);
 
-  const showToast = useCallback((message: string) => {
-    setToast({ message, visible: true });
-    setTimeout(() => setToast(null), 3000);
-  }, []);
-
-  const Toast = useMemo(
-    () =>
-      toast
-        ? () => (
-            <div
-              style={{ zIndex: 9999 }}
-              className="fixed bottom-6 right-6 transform rounded-xl border border-[var(--border)] bg-[var(--surface)] px-5 py-3 shadow-lg shadow-[var(--shadow-color)] transition-all animate-in fade-in slide-in-from-bottom-4"
-            >
-              <div className="flex items-center gap-2.5">
-                <X size={16} className="text-emerald-400 flex-shrink-0" />
-                <p className="text-sm font-medium text-[var(--text-primary)]">
-                  {toast.message}
-                </p>
-                <button
-                  onClick={() => setToast(null)}
-                  className="ml-2 rounded-full p-0.5 text-[var(--text-tertiary)] hover:bg-[var(--hover-bg)] hover:text-[var(--text-primary)]"
-                >
-                  <X size={14} />
-                </button>
-              </div>
-            </div>
-          )
-        : null,
-    [toast]
-  );
-
-  return { showToast, Toast };
-}
-
-/* ── Modal overlay ──────────────────────────────────────── */
-function ModalOverlay({
-  children,
-  onClose,
-}: {
-  children: React.ReactNode;
-  onClose: () => void;
-}) {
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden p-4"
-      style={{ backgroundColor: "var(--modal-overlay)" }}
-      onClick={onClose}
+      className="group relative flex flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] transition-all duration-500 hover:-translate-y-1 hover:border-violet-500/30 hover:shadow-2xl hover:shadow-violet-500/5"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      <div
-        className="relative w-full max-w-lg rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-xl shadow-[var(--shadow-color)]"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {children}
-      </div>
-    </div>
-  );
-}
+      {/* Image area */}
+      <div className="relative aspect-square flex items-center justify-center bg-[var(--hover-bg)] overflow-hidden">
+        <span className="text-7xl transition-transform duration-500 group-hover:scale-110">{product.image}</span>
 
-/* ── Action Dropdown (three dots) ──────────────────────── */
-function ActionDropdown({
-  product,
-  onEdit,
-  onDelete,
-  onDuplicate,
-}: {
-  product: Product;
-  onEdit: (product: Product) => void;
-  onDelete: (product: Product) => void;
-  onDuplicate: (product: Product) => void;
-}) {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <div className="relative">
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          setOpen(!open);
-        }}
-        className="rounded-lg p-1.5 text-[var(--text-tertiary)] transition-all hover:bg-[var(--hover-bg)] hover:text-[var(--text-primary)]"
-        aria-label="Actions"
-      >
-        <span className="sr-only">Actions</span>
-        <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-          <circle cx={12} cy={5} r={1} /><circle cx={12} cy={12} r={1} /><circle cx={12} cy={19} r={1} />
-        </svg>
-      </button>
-
-      {open && (
-        <>
-          <div
-            className="fixed inset-0 z-10"
-            onClick={() => setOpen(false)}
-          />
-          <div
-            className="absolute right-0 top-full z-20 mt-1 w-48 overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] shadow-lg shadow-[var(--shadow-color)]"
-            style={{ zIndex: 9998 }}
-          >
+        {/* Quick actions overlay */}
+        {isHovered && (
+          <div className="absolute inset-0 flex items-center justify-center gap-3 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity">
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setOpen(false);
-                onEdit(product);
-              }}
-              className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm text-[var(--text-secondary)] transition-colors hover:bg-[var(--hover-bg)] hover:text-[var(--text-primary)]"
+              onClick={() => setIsWishlisted(!isWishlisted)}
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/40 transition-all"
+              aria-label="Add to wishlist"
             >
-              <Edit size={14} className="text-[var(--text-tertiary)]" />
-              Edit
+              <Heart size={18} className={isWishlisted ? "fill-red-500 text-red-500" : ""} />
             </button>
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setOpen(false);
-                onDuplicate(product);
-              }}
-              className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm text-[var(--text-secondary)] transition-colors hover:bg-[var(--hover-bg)] hover:text-[var(--text-primary)]"
+              onClick={() => onAddToCart(product)}
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-violet-500/80 backdrop-blur-sm text-white hover:bg-violet-500 transition-all"
+              aria-label="Add to cart"
             >
-              <Copy size={14} className="text-[var(--text-tertiary)]" />
-              Duplicate
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setOpen(false);
-                onDelete(product);
-              }}
-              className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm text-red-400 transition-colors hover:bg-red-400/10"
-            >
-              <Trash2 size={14} />
-              Delete
+              <ShoppingBag size={18} />
             </button>
           </div>
-        </>
-      )}
-    </div>
-  );
-}
+        )}
 
-/* ── Product form (shared between Add & Edit) ──────────── */
-function ProductForm({
-  product,
-  onSubmit,
-  onCancel,
-  submitLabel,
-}: {
-  product?: Partial<Product>;
-  onSubmit: (data: Partial<Product>) => void;
-  onCancel: () => void;
-  submitLabel: string;
-}) {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    onSubmit({
-      name: formData.get("name") as string,
-      sku: formData.get("sku") as string,
-      price: parseFloat(formData.get("price") as string),
-      stock: parseInt(formData.get("stock") as string, 10),
-      category: formData.get("category") as string,
-      status: formData.get("status") as Product["status"],
-      description: formData.get("description") as string,
-    });
-  };
+        {/* Badges */}
+        {!product.inStock && (
+          <span className="absolute top-3 left-3 rounded-full bg-red-500/90 px-2.5 py-1 text-[10px] font-bold text-white">
+            Sold Out
+          </span>
+        )}
+        {product.rating >= 4.8 && (
+          <span className="absolute top-3 right-3 rounded-full bg-amber-400/90 px-2.5 py-1 text-[10px] font-bold text-white">
+            ⭐ Best Seller
+          </span>
+        )}
+      </div>
 
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4 p-6">
-      <div>
-        <label
-          htmlFor="name"
-          className="mb-1 block text-xs font-medium text-[var(--text-tertiary)]"
+      {/* Details */}
+      <div className="flex flex-1 flex-col gap-2 p-5">
+        <Link
+          href={`/dashboard/products/${product.id}`}
+          className="text-sm font-semibold text-[var(--text-primary)] hover:text-violet-400 line-clamp-2"
         >
-          Product Name
-        </label>
-        <input
-          id="name"
-          name="name"
-          type="text"
-          defaultValue={product?.name ?? ""}
-          placeholder="e.g. Wireless Headphones"
-          required
-          className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-2.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-tertiary)] outline-none transition-all focus:border-[var(--text-tertiary)] focus:ring-1 focus:ring-[var(--text-tertiary)]/20"
-        />
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label
-            htmlFor="sku"
-            className="mb-1 block text-xs font-medium text-[var(--text-tertiary)]"
-          >
-            SKU
-          </label>
-          <input
-            id="sku"
-            name="sku"
-            type="text"
-            defaultValue={product?.sku ?? ""}
-            placeholder="e.g. WH-2024-BLK"
-            required
-            className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-2.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-tertiary)] outline-none transition-all focus:border-[var(--text-tertiary)] focus:ring-1 focus:ring-[var(--text-tertiary)]/20"
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="price"
-            className="mb-1 block text-xs font-medium text-[var(--text-tertiary)]"
-          >
-            Price ($)
-          </label>
-          <input
-            id="price"
-            name="price"
-            type="number"
-            step="0.01"
-            min="0"
-            defaultValue={product?.price ?? ""}
-            placeholder="99.99"
-            required
-            className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-2.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-tertiary)] outline-none transition-all focus:border-[var(--text-tertiary)] focus:ring-1 focus:ring-[var(--text-tertiary)]/20"
-          />
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label
-            htmlFor="stock"
-            className="mb-1 block text-xs font-medium text-[var(--text-tertiary)]"
-          >
-            Stock
-          </label>
-          <input
-            id="stock"
-            name="stock"
-            type="number"
-            min="0"
-            defaultValue={product?.stock ?? ""}
-            placeholder="100"
-            required
-            className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-2.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-tertiary)] outline-none transition-all focus:border-[var(--text-tertiary)] focus:ring-1 focus:ring-[var(--text-tertiary)]/20"
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="category"
-            className="mb-1 block text-xs font-medium text-[var(--text-tertiary)]"
-          >
-            Category
-          </label>
-          <select
-            id="category"
-            name="category"
-            defaultValue={product?.category ?? "Electronics"}
-            required
-            className="w-full appearance-none rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-2.5 pr-8 text-sm text-[var(--text-secondary)] outline-none transition-all focus:border-[var(--text-tertiary)] focus:ring-1 focus:ring-[var(--text-tertiary)]/20"
-          >
-            <option>Electronics</option>
-            <option>Accessories</option>
-            <option>Audio</option>
-            <option>Displays</option>
-            <option>Lighting</option>
-          </select>
-        </div>
-      </div>
-      <div>
-        <label
-          htmlFor="status"
-          className="mb-1 block text-xs font-medium text-[var(--text-tertiary)]"
-        >
-          Status
-        </label>
-        <select
-          id="status"
-          name="status"
-          defaultValue={product?.status ?? "active"}
-          required
-          className="w-full appearance-none rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-2.5 pr-8 text-sm text-[var(--text-secondary)] outline-none transition-all focus:border-[var(--text-tertiary)] focus:ring-1 focus:ring-[var(--text-tertiary)]/20"
-        >
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-          <option value="out-of-stock">Out of Stock</option>
-        </select>
-      </div>
-      <div>
-        <label
-          htmlFor="description"
-          className="mb-1 block text-xs font-medium text-[var(--text-tertiary)]"
-        >
-          Description
-        </label>
-        <textarea
-          id="description"
-          name="description"
-          defaultValue={product?.description ?? ""}
-          rows={3}
-          placeholder="Brief product description..."
-          className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-2.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-tertiary)] outline-none transition-all focus:border-[var(--text-tertiary)] focus:ring-1 focus:ring-[var(--text-tertiary)]/20 resize-none"
-        />
-      </div>
-      <div className="flex justify-end gap-3 pt-2">
-        <button
-          type="button"
-          onClick={onCancel}
-          className="rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-2.5 text-sm font-medium text-[var(--text-secondary)] transition-all hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          className="rounded-xl border border-[var(--border)] bg-[var(--hover-bg-strong)] px-4 py-2.5 text-sm font-medium text-[var(--text-primary)] transition-all hover:opacity-90"
-        >
-          {submitLabel}
-        </button>
-      </div>
-    </form>
-  );
-}
+          {product.name}
+        </Link>
 
-/* ── Stat cards ─────────────────────────────────────────── */
-function StatCards({ products }: { products: Product[] }) {
-  const stats = useMemo(() => {
-    const total = products.length;
-    const active = products.filter((p) => p.status === "active").length;
-    const outOfStock = products.filter((p) => p.status === "out-of-stock").length;
-    const lowStock = products.filter((p) => p.stock > 0 && p.stock < 20).length;
-    return [
-      { label: "Total Products", count: total, icon: Package, color: "text-violet-400", bg: "bg-violet-400/10" },
-      { label: "Active", count: active, icon: Eye, color: "text-emerald-400", bg: "bg-emerald-400/10" },
-      { label: "Out of Stock", count: outOfStock, icon: X, color: "text-red-400", bg: "bg-red-400/10" },
-      { label: "Low Stock", count: lowStock, icon: AlertCircle, color: "text-amber-400", bg: "bg-amber-400/10" },
-    ];
-  }, [products]);
-
-  return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-      {stats.map((stat) => {
-        const Icon = stat.icon;
-        return (
-          <div
-            key={stat.label}
-            className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5"
-          >
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-[var(--text-secondary)]">{stat.label}</p>
-              <div className="rounded-lg bg-[var(--hover-bg)] p-2">
-                <Icon size={18} className={`${stat.color} flex-shrink-0`} />
-              </div>
-            </div>
-            <p className="mt-2 text-2xl font-bold text-[var(--text-primary)]">{stat.count}</p>
+        {/* Rating */}
+        <div className="flex items-center gap-1.5">
+          <div className="flex gap-0.5">
+            {[...Array(5)].map((_, s) => (
+              <Star
+                key={s}
+                size={11}
+                className={s < Math.floor(product.rating) ? "text-amber-400 fill-amber-400" : "text-gray-600"}
+              />
+            ))}
           </div>
-        );
-      })}
+          <span className="text-[11px] text-[var(--text-tertiary)]">
+            {product.rating} ({product.reviews})
+          </span>
+        </div>
+
+        {/* Price & Category */}
+        <div className="mt-auto flex items-center justify-between">
+          <span className="text-lg font-bold tracking-tight text-violet-400">${product.price.toFixed(2)}</span>
+          <span className="text-[11px] text-[var(--text-tertiary)] capitalize">{product.category}</span>
+        </div>
+
+        {/* Add to cart button */}
+        <button
+          onClick={() => onAddToCart(product)}
+          disabled={!product.inStock}
+          className={`mt-3 w-full rounded-xl py-2.5 text-sm font-semibold transition-all ${
+            product.inStock
+              ? "bg-violet-500 text-white hover:bg-violet-600 shadow-lg shadow-violet-500/25"
+              : "bg-gray-700 text-gray-400 cursor-not-allowed"
+          }`}
+        >
+          {product.inStock ? "Add to Cart" : "Out of Stock"}
+        </button>
+      </div>
     </div>
   );
 }
 
-/* ── Main Component ─────────────────────────────────────── */
+// ─── Featured Products Carousel Data ─────────────────────
+const featuredProducts = [
+  { id: 1, name: "Wireless Headphones Pro", price: 149.99, image: "🎧", rating: 4.8 },
+  { id: 2, name: "Smart Watch Ultra", price: 399.00, image: "⌚", rating: 4.9 },
+  { id: 3, name: "Noise Cancelling Earbuds", price: 199.00, image: "🎵", rating: 4.8 },
+  { id: 4, name: "Running Shoes Pro", price: 124.99, image: "👟", rating: 4.7 },
+  { id: 5, name: "Desk Lamp LED", price: 54.99, image: "💡", rating: 4.6 },
+];
+
+// ─── Flash Sale Data ─────────────────────────────────────
+const flashSales = [
+  { id: 1, name: "USB-C Hub 8-in-1", original: 69.99, sale: 45.50, discount: "35%", image: "🔌" },
+  { id: 2, name: "Canvas Tote Bag", original: 49.99, sale: 34.99, discount: "30%", image: "👜" },
+  { id: 3, name: "Ceramic Water Bottle", original: 34.99, sale: 24.99, discount: "28%", image: "🍶" },
+  { id: 4, name: "Wireless Mouse", original: 59.99, sale: 39.99, discount: "33%", image: "🖱️" },
+];
+
 export default function ProductsPage() {
-  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [cart, setCart] = useState<typeof allProducts>([]);
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [sortBy, setSortBy] = useState("featured");
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
-  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("all");
-  const [sortBy, setSortBy] = useState<SortOption>("name-asc");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [confirmDelete, setConfirmDelete] = useState<Product | null>(null);
+  const [cartSlideOpen, setCartSlideOpen] = useState(false);
 
-  const itemsPerPage = 6;
-  const { showToast, Toast } = useToast();
-
-  /* ── Filter & sort logic ──────────────────────────────── */
-  const filteredAndSortedProducts = useMemo(() => {
-    let result = [...products];
-
-    // Search: name, SKU, or category
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      result = result.filter(
-        (p) =>
-          p.name.toLowerCase().includes(q) ||
-          p.sku.toLowerCase().includes(q) ||
-          p.category.toLowerCase().includes(q)
-      );
-    }
-
-    // Status filter
-    if (statusFilter !== "all") {
-      result = result.filter((p) => p.status === statusFilter);
-    }
+  // Filter & Sort Logic
+  const filteredProducts = useMemo(() => {
+    let result = [...allProducts];
 
     // Category filter
-    if (categoryFilter !== "all") {
-      result = result.filter((p) => p.category === categoryFilter);
+    if (activeCategory !== "All") {
+      result = result.filter((p) => p.category === activeCategory);
+    }
+
+    // Search
+    if (searchQuery) {
+      result = result.filter((p) =>
+        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.category.toLowerCase().includes(searchQuery.toLowerCase())
+      );
     }
 
     // Sort
     switch (sortBy) {
-      case "name-asc":
-        result.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case "name-desc":
-        result.sort((a, b) => b.name.localeCompare(a.name));
-        break;
       case "price-asc":
         result.sort((a, b) => a.price - b.price);
         break;
       case "price-desc":
         result.sort((a, b) => b.price - a.price);
         break;
-      case "stock-asc":
-        result.sort((a, b) => a.stock - b.stock);
+      case "rating":
+        result.sort((a, b) => b.rating - a.rating);
+        break;
+      case "reviews":
+        result.sort((a, b) => b.reviews - a.reviews);
+        break;
+      default:
         break;
     }
 
     return result;
-  }, [products, searchQuery, statusFilter, categoryFilter, sortBy]);
+  }, [activeCategory, sortBy, searchQuery]);
 
-  /* ── Pagination calc ──────────────────────────────────── */
-  const totalPages = Math.ceil(filteredAndSortedProducts.length / itemsPerPage);
-  const paginatedProducts = filteredAndSortedProducts.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-  const showingFrom = (currentPage - 1) * itemsPerPage + 1;
-  const showingTo = Math.min(currentPage * itemsPerPage, filteredAndSortedProducts.length);
-
-  // Reset to first page when filters change
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-    setCurrentPage(1);
-  };
-  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setStatusFilter(e.target.value as StatusFilter);
-    setCurrentPage(1);
-  };
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCategoryFilter(e.target.value as CategoryFilter);
-    setCurrentPage(1);
-  };
-  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSortBy(e.target.value as SortOption);
-    setCurrentPage(1);
+  const addToCart = (product: typeof allProducts[0]) => {
+    setCart((prev) => {
+      const existing = prev.find((c) => c.id === product.id);
+      if (existing) {
+        return prev.map((c) => (c.id === product.id ? { ...c, quantity: (c as any).quantity + 1 } : c));
+      }
+      return [...prev, { ...product, quantity: 1 }];
+    });
+    setCartSlideOpen(true);
   };
 
-  /* ── Action handlers ──────────────────────────────────── */
-  const handleEdit = useCallback((product: Product) => {
-    setEditingProduct(product);
-    setIsEditModalOpen(true);
-  }, []);
-
-  const handleDelete = useCallback((product: Product) => {
-    setConfirmDelete(product);
-  }, []);
-
-  const confirmDeleteProduct = useCallback(() => {
-    if (!confirmDelete) return;
-    setProducts((prev) => prev.filter((p) => p.id !== confirmDelete.id));
-    showToast(`${confirmDelete.name} deleted successfully`);
-    setConfirmDelete(null);
-  }, [confirmDelete, showToast]);
-
-  const handleDuplicate = useCallback((product: Product) => {
-    const newId = `PRD-${String(products.length + 1).padStart(3, "0")}`;
-    const newProduct: Product = {
-      ...product,
-      id: newId,
-      name: `${product.name} (Copy)`,
-      sku: `${product.sku}-C`,
-    };
-    setProducts((prev) => [newProduct, ...prev]);
-    showToast(`${product.name} duplicated successfully`);
-  }, [products.length, showToast]);
-
-  /* ── Add Product submit ───────────────────────────────── */
-  const handleAddSubmit = useCallback(
-    (data: Partial<Product>) => {
-      const newId = `PRD-${String(products.length + 1).padStart(3, "0")}`;
-      const newProduct: Product = {
-        id: newId,
-        name: data.name!,
-        sku: data.sku!,
-        price: data.price!,
-        stock: data.stock!,
-        category: data.category!,
-        status: data.status!,
-        description: data.description ?? "",
-      };
-      setProducts((prev) => [newProduct, ...prev]);
-      setIsAddModalOpen(false);
-      showToast(`${newProduct.name} added successfully`);
-    },
-    [products.length, showToast]
-  );
-
-  /* ── Edit Product submit ──────────────────────────────── */
-  const handleEditSubmit = useCallback(
-    (data: Partial<Product>) => {
-      if (!editingProduct) return;
-      setProducts((prev) =>
-        prev.map((p) =>
-          p.id === editingProduct.id
-            ? { ...p, ...data }
-            : p
-        )
-      );
-      setIsEditModalOpen(false);
-      setEditingProduct(null);
-      showToast(`${data.name} updated successfully`);
-    },
-    [editingProduct, showToast]
-  );
-
-  /* ── Stock color helper ───────────────────────────────── */
-  const getStockClass = (stock: number): string => {
-    if (stock === 0) return "bg-red-400/10 text-red-400";
-    if (stock < 20) return "bg-amber-400/10 text-amber-400";
-    return "bg-emerald-400/10 text-emerald-400";
+  const removeFromCart = (id: number) => {
+    setCart((prev) => prev.filter((c) => c.id !== id));
   };
 
-  /* ── Render ───────────────────────────────────────────── */
+  const updateQuantity = (id: number, delta: number) => {
+    setCart((prev) =>
+      prev.map((c) => {
+        const newQty = (c as any).quantity + delta;
+        if (newQty <= 0) return null;
+        return { ...c, quantity: newQty };
+      }).filter(Boolean) as typeof allProducts
+    );
+  };
+
+  const cartCount = (id: number) => {
+    const item = cart.find((c) => c.id === id);
+    return item ? (item as any).quantity || 1 : 0;
+  };
+
+  const cartTotal = cart.reduce((sum, c) => sum + c.price * ((c as any).quantity || 1), 0);
+
   return (
-    <div className="space-y-6">
-      {Toast && Toast()}
-
-      {/* ── PageHeader ────────────────────────────────── */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">
-            Products
-          </h1>
-          <p className="text-sm text-[var(--text-secondary)]">
-            Manage your product catalog, inventory, and pricing.
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => setIsAddModalOpen(true)}
-            className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-2.5 text-sm font-medium text-[var(--text-secondary)] transition-all hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]"
-          >
-            <Plus size={16} />
-            Add Product
-          </button>
-        </div>
-      </div>
-
-      {/* ── Summary Stat Cards ─────────────────────────── */}
-      <StatCards products={products} />
-
-      {/* ── Search, Filter & Sort Bar ──────────────────── */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        {/* Search */}
-        <div className="relative flex-1">
-          <Search
-            size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]"
-          />
-          <input
-            type="text"
-            placeholder="Search by name, SKU, or category..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-            className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] py-2.5 pl-10 pr-4 text-sm text-[var(--text-primary)] placeholder-[var(--text-tertiary)] outline-none transition-all focus:border-[var(--text-tertiary)] focus:ring-1 focus:ring-[var(--text-tertiary)]/20"
-          />
+    <div className="min-h-screen bg-[var(--background)]">
+      {/* ═══════════════════════════════════════════
+          FEATURED PRODUCTS CAROUSEL
+          ═══════════════════════════════════════════ */}
+      <section className="pt-20 pb-12">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="mb-8 flex items-center justify-between">
+            <div>
+              <h2 className="text-3xl font-black tracking-tighter text-[var(--text-primary)]">
+                ⭐ Featured Products
+              </h2>
+              <p className="mt-1 text-sm text-[var(--text-tertiary)]">Hand-picked just for you</p>
+            </div>
+          </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          {/* Status Filter */}
-          <div className="relative">
-            <select
-              value={statusFilter}
-              onChange={handleStatusChange}
-              className="appearance-none rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-2.5 pr-8 text-sm text-[var(--text-secondary)] outline-none transition-all focus:border-[var(--text-tertiary)] focus:ring-1 focus:ring-[var(--text-tertiary)]/20"
-            >
-              <option value="all">All Status</option>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-              <option value="out-of-stock">Out of Stock</option>
-            </select>
-            <ChevronDown
-              size={14}
-              className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]"
-            />
+        <Carousel opts={{ loop: true, align: "start", slidesToScroll: 1 }} arrows dots>
+          {featuredProducts.map((product) => (
+            <div key={product.id} className="min-w-[200px] max-w-[260px] px-2">
+              <div className="flex flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] transition-all duration-300 hover:border-violet-500/30 hover:shadow-xl hover:shadow-violet-500/5 group cursor-pointer">
+                <div className="aspect-square flex items-center justify-center bg-[var(--hover-bg)]">
+                  <span className="text-7xl transition-transform duration-500 group-hover:scale-110">{product.image}</span>
+                </div>
+                <div className="p-5">
+                  <h3 className="text-sm font-semibold text-[var(--text-primary)] line-clamp-1">{product.name}</h3>
+                  <div className="mt-2 flex items-center gap-1">
+                    {[...Array(5)].map((_, s) => (
+                      <Star key={s} size={12} className={s < Math.floor(product.rating) ? "text-amber-400 fill-amber-400" : "text-gray-600"} />
+                    ))}
+                    <span className="ml-1 text-[11px] text-[var(--text-tertiary)]">{product.rating}</span>
+                  </div>
+                  <p className="mt-1 text-lg font-bold text-violet-400">${product.price.toFixed(2)}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </Carousel>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          FLASH SALE SECTION
+          ═══════════════════════════════════════════ */}
+      <section className="pb-20">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="mb-8 flex items-center gap-3">
+            <span className="inline-flex items-center gap-2 rounded-full bg-red-500/10 px-3 py-1.5 text-xs font-bold uppercase text-red-400">
+              🔥 Flash Sale
+            </span>
+            <span className="text-sm text-[var(--text-tertiary)]">Ends in 3h 24m 18s</span>
           </div>
 
-          {/* Category Filter */}
-          <div className="relative">
+          <Carousel opts={{ loop: true, align: "start", slidesToScroll: 1 }} arrows dots>
+            {flashSales.map((item) => (
+              <div key={item.id} className="min-w-[220px] max-w-[280px] px-2">
+                <div className="flex flex-col overflow-hidden rounded-2xl border border-red-500/20 bg-[var(--surface)] transition-all duration-300 hover:shadow-2xl hover:shadow-red-500/5">
+                  <div className="relative aspect-square flex items-center justify-center bg-red-500/5">
+                    <span className="text-7xl">{item.image}</span>
+                    <span className="absolute top-3 right-3 rounded-full bg-gradient-to-br from-red-500 to-rose-600 px-2.5 py-1 text-[10px] font-black text-white">
+                      {item.discount}
+                    </span>
+                  </div>
+                  <div className="p-5">
+                    <h3 className="text-sm font-semibold text-[var(--text-primary)]">{item.name}</h3>
+                    <div className="mt-2 flex items-baseline gap-2">
+                      <span className="text-xl font-bold text-red-400">${item.sale.toFixed(2)}</span>
+                      <span className="text-sm text-[var(--text-tertiary)] line-through">${item.original.toFixed(2)}</span>
+                    </div>
+                    <button
+                      className="mt-3 w-full rounded-xl bg-gradient-to-r from-red-500 to-rose-600 py-2.5 text-sm font-bold text-white shadow-lg shadow-red-500/25 transition-all hover:shadow-xl hover:shadow-red-500/40"
+                      onClick={() => alert(`Added ${item.name} to cart!`)}
+                    >
+                      Grab Deal!
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </Carousel>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          FULL PRODUCT GRID
+          ═══════════════════════════════════════════ */}
+      <section className="mx-auto max-w-7xl px-6 py-12">
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold tracking-tight text-[var(--text-primary)]">
+            All Products
+          </h2>
+          <p className="mt-1 text-sm text-[var(--text-tertiary)]">
+            Browse our curated collection
+          </p>
+        </div>
+
+        {/* Filters */}
+        <div className="mb-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+          {/* Categories */}
+          <div className="flex flex-wrap gap-2">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`rounded-full border px-4 py-1.5 text-xs font-semibold transition-all ${
+                  activeCategory === cat
+                    ? "border-violet-500 bg-violet-500 text-white shadow-lg shadow-violet-500/25"
+                    : "border-[var(--border)] bg-[var(--hover-bg)] text-[var(--text-secondary)] hover:border-violet-500/50 hover:text-[var(--text-primary)]"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {/* Sort & Search */}
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]" />
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-48 rounded-full border border-[var(--border)] bg-[var(--hover-bg)] py-1.5 pl-9 pr-4 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+              />
+            </div>
             <select
-              value={categoryFilter}
-              onChange={handleCategoryChange}
-              className="appearance-none rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-2.5 pr-8 text-sm text-[var(--text-secondary)] outline-none transition-all focus:border-[var(--text-tertiary)] focus:ring-1 focus:ring-[var(--text-tertiary)]/20"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="rounded-full border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-1.5 text-sm text-[var(--text-secondary)] outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
             >
-              {categoryOptions.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat === "all" ? "All Categories" : cat}
+              {sortOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
                 </option>
               ))}
             </select>
-            <ChevronDown
-              size={14}
-              className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]"
-            />
           </div>
+        </div>
 
-          {/* Sort */}
-          <div className="relative">
-            <select
-              value={sortBy}
-              onChange={handleSortChange}
-              className="appearance-none rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-2.5 pr-8 text-sm text-[var(--text-secondary)] outline-none transition-all focus:border-[var(--text-tertiary)] focus:ring-1 focus:ring-[var(--text-tertiary)]/20"
-            >
-              <option value="name-asc">A → Z</option>
-              <option value="name-desc">Z → A</option>
-              <option value="price-asc">Price Low → High</option>
-              <option value="price-desc">Price High → Low</option>
-              <option value="stock-asc">Stock Low → High</option>
-            </select>
-            <ArrowUpDown
-              size={14}
-              className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]"
-            />
+        {/* Active filters */}
+        {(activeCategory !== "All" || searchQuery) && (
+          <div className="mb-6 flex items-center gap-2">
+            <SlidersHorizontal size={14} className="text-[var(--text-tertiary)]" />
+            <span className="text-sm text-[var(--text-tertiary)]">
+              {activeCategory !== "All" && (
+                <span className="mr-1 inline-flex items-center gap-1 rounded-full bg-violet-500/10 px-2.5 py-0.5 text-xs font-medium text-violet-400">
+                  {activeCategory}
+                  <button onClick={() => setActiveCategory("All")} aria-label="Clear category">
+                    <X size={10} />
+                  </button>
+                </span>
+              )}
+              {searchQuery && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-2.5 py-0.5 text-xs font-medium text-blue-400">
+                  "{searchQuery}"
+                  <button onClick={() => setSearchQuery("")} aria-label="Clear search">
+                    <X size={10} />
+                  </button>
+                </span>
+              )}
+            </span>
           </div>
+        )}
 
-          {/* Clear Filters */}
-          {(searchQuery || statusFilter !== "all" || categoryFilter !== "all" || sortBy !== "name-asc") && (
+        {/* Product Grid */}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filteredProducts.map((product) => (
+            <ProductCard key={product.id} product={product} onAddToCart={addToCart} />
+          ))}
+        </div>
+
+        {/* Empty state */}
+        {filteredProducts.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-20 text-white/40">
+            <ShoppingBag size={64} className="mb-4 opacity-50" />
+            <p className="text-lg font-medium">No products found</p>
+            <p className="text-sm">Try adjusting your filters or search query</p>
             <button
               onClick={() => {
+                setActiveCategory("All");
                 setSearchQuery("");
-                setStatusFilter("all");
-                setCategoryFilter("all");
-                setSortBy("name-asc");
               }}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-2.5 text-sm font-medium text-[var(--text-secondary)] transition-all hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]"
+              className="mt-4 rounded-full border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-2 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all"
             >
-              <X size={14} />
-              Clear
+              Clear Filters
             </button>
-          )}
-        </div>
-      </div>
+          </div>
+        )}
+      </section>
 
-      {/* Results count */}
-      <p className="text-sm text-[var(--text-tertiary)]">
-        {filteredAndSortedProducts.length} result
-        {filteredAndSortedProducts.length !== 1 ? "s" : ""}
-      </p>
+      {/* ═══════════════════════════════════════════
+          SLIDE CART (Drawer from right)
+          ═══════════════════════════════════════════ */}
+      {cartSlideOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm lg:left-[260px]"
+          onClick={() => setCartSlideOpen(false)}
+        >
+          <div
+            className="fixed right-0 top-0 h-full w-full max-w-md bg-[var(--surface)] shadow-2xl shadow-black/40 transition-transform"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-[var(--border)] p-6">
+              <h2 className="text-lg font-bold tracking-tight text-[var(--text-primary)]">
+                🛒 Cart ({cart.reduce((n, c) => n + ((c as any).quantity || 1), 0)} items)
+              </h2>
+              <button
+                onClick={() => setCartSlideOpen(false)}
+                className="rounded-lg p-1.5 text-[var(--text-tertiary)] hover:bg-[var(--hover-bg)] hover:text-[var(--text-primary)]"
+              >
+                <X size={20} />
+              </button>
+            </div>
 
-      {/* ── Data Table ──────────────────────────────────── */}
-      <div className="overflow-hidden rounded-2xl border border-[var(--border)]">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[900px]">
-            <thead>
-              <tr className="border-b border-[var(--border)] bg-[var(--table-header-bg)]">
-                <th className="px-6 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">
-                  Product
-                </th>
-                <th className="px-6 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">
-                  SKU
-                </th>
-                <th className="px-6 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">
-                  Price
-                </th>
-                <th className="px-6 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">
-                  Stock
-                </th>
-                <th className="px-6 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">
-                  Category
-                </th>
-                <th className="px-6 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[var(--table-divider)]">
-              {paginatedProducts.length > 0 ? (
-                paginatedProducts.map((product) => {
-                  const status = statusConfig[product.status];
+            {/* Cart Items */}
+            <div className="flex-1 overflow-y-auto p-6">
+              {cart.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-20 text-[var(--text-tertiary)]">
+                  <ShoppingBag size={48} className="mb-4 opacity-50" />
+                  <p className="text-sm">Your cart is empty</p>
+                </div>
+              ) : (
+                cart.map((item) => {
+                  const qty = (item as any).quantity || 1;
                   return (
-                    <tr
-                      key={product.id}
-                      className="transition-colors hover:bg-[var(--table-row-hover)]"
-                    >
-                      {/* Product */}
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="h-9 w-9 rounded-lg bg-[var(--hover-bg)] flex items-center justify-center text-[var(--text-secondary)] font-medium text-xs">
-                            <Package size={14} />
-                          </div>
-                          <div>
-                            <p className="font-medium text-[var(--text-primary)]">
-                              {product.name}
-                            </p>
-                            <p className="text-xs text-[var(--text-tertiary)]">
-                              {product.id}
-                            </p>
-                          </div>
-                        </div>
-                      </td>
-
-                      {/* SKU */}
-                      <td className="px-6 py-4">
-                        <span className="text-sm text-[var(--text-secondary)] font-mono">
-                          {product.sku}
-                        </span>
-                      </td>
-
-                      {/* Price */}
-                      <td className="px-6 py-4">
-                        <span className="text-sm font-semibold text-[var(--text-primary)]">
-                          ${product.price.toFixed(2)}
-                        </span>
-                      </td>
-
-                      {/* Stock */}
-                      <td className="px-6 py-4">
-                        <span
-                          className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ${getStockClass(product.stock)}`}
+                    <div key={item.id} className="mb-4 flex items-center gap-4 rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] p-4">
+                      <span className="text-3xl">{item.image}</span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-[var(--text-primary)] truncate">{item.name}</p>
+                        <p className="text-sm font-bold text-violet-400">
+                          ${(item.price * qty).toFixed(2)}
+                        </p>
+                      </div>
+                      {/* Qty Controls */}
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => updateQuantity(item.id, -1)}
+                          className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--border)] text-[var(--text-secondary)] hover:border-violet-500/50 hover:text-violet-400"
                         >
-                          {product.stock}
+                          <Minus size={12} />
+                        </button>
+                        <span className="w-7 text-center text-sm font-bold text-[var(--text-primary)]">
+                          {qty}
                         </span>
-                      </td>
-
-                      {/* Category */}
-                      <td className="px-6 py-4">
-                        <span className="text-sm text-[var(--text-secondary)]">
-                          {product.category}
-                        </span>
-                      </td>
-
-                      {/* Status Badge */}
-                      <td className="px-6 py-4">
-                        <span
-                          className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ${status.bg} ${status.color}`}
+                        <button
+                          onClick={() => updateQuantity(item.id, 1)}
+                          className="flex h-7 w-7 items-center justify-center rounded-full border border-[var(--border)] text-[var(--text-secondary)] hover:border-violet-500/50 hover:text-violet-400"
                         >
-                          {status.label}
-                        </span>
-                      </td>
-
-                      {/* Actions */}
-                      <td className="px-6 py-4 text-right">
-                        <ActionDropdown
-                          product={product}
-                          onEdit={handleEdit}
-                          onDelete={handleDelete}
-                          onDuplicate={handleDuplicate}
-                        />
-                      </td>
-                    </tr>
+                          <Plus size={12} />
+                        </button>
+                      </div>
+                    </div>
                   );
                 })
-              ) : (
-                <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center">
-                    <RefreshCw
-                      size={32}
-                      className="mx-auto mb-3 text-[var(--text-tertiary)]"
-                    />
-                    <p className="text-sm text-[var(--text-secondary)]">
-                      No products match your filters.
-                    </p>
-                    <button
-                      onClick={() => {
-                        setSearchQuery("");
-                        setStatusFilter("all");
-                        setCategoryFilter("all");
-                        setSortBy("name-asc");
-                      }}
-                      className="mt-2 inline-flex items-center gap-1.5 rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-2 text-sm font-medium text-[var(--text-secondary)] transition-all hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]"
-                    >
-                      <RefreshCw size={14} />
-                      Reset Filters
-                    </button>
-                  </td>
-                </tr>
               )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* ── Pagination ───────────────────────────────────── */}
-      <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
-        <p className="text-sm text-[var(--text-secondary)]">
-          Showing{" "}
-          <span className="font-medium text-[var(--text-primary)]">
-            {filteredAndSortedProducts.length > 0 ? showingFrom : 0}
-          </span>{" "}
-          –{" "}
-          <span className="font-medium text-[var(--text-primary)]">
-            {showingTo}
-          </span>{" "}
-          of{" "}
-          <span className="font-medium text-[var(--text-primary)]">
-            {filteredAndSortedProducts.length}
-          </span>{" "}
-          products
-        </p>
-
-        <div className="flex items-center gap-1">
-          <button
-            onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-            disabled={currentPage === 1}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--hover-bg)] text-[var(--text-secondary)] transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]"
-            aria-label="Previous page"
-          >
-            ←
-          </button>
-
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-            <button
-              key={page}
-              onClick={() => setCurrentPage(page)}
-              className={`flex h-9 w-9 items-center justify-center rounded-lg border transition-all ${
-                page === currentPage
-                  ? "border-violet-500 bg-violet-500/10 text-violet-400 font-semibold"
-                  : "border-[var(--border)] bg-[var(--hover-bg)] text-[var(--text-secondary)] hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]"
-              }`}
-              aria-label={`Page ${page}`}
-            >
-              {page}
-            </button>
-          ))}
-
-          <button
-            onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-            disabled={currentPage === totalPages}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--hover-bg)] text-[var(--text-secondary)] transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]"
-            aria-label="Next page"
-          >
-            →
-          </button>
-        </div>
-      </div>
-
-      {/* ── Add Product Modal ───────────────────────────── */}
-      {isAddModalOpen && (
-        <ModalOverlay onClose={() => setIsAddModalOpen(false)}>
-          <div>
-            <div className="flex items-center justify-between border-b border-[var(--table-divider)] px-6 py-4">
-              <h2 className="text-lg font-semibold text-[var(--text-primary)]">
-                Add Product
-              </h2>
-              <button
-                onClick={() => setIsAddModalOpen(false)}
-                className="rounded-lg p-1 text-[var(--text-tertiary)] transition-all hover:bg-[var(--hover-bg)] hover:text-[var(--text-primary)]"
-                aria-label="Close"
-              >
-                <X size={18} />
-              </button>
             </div>
-            <ProductForm
-              onSubmit={handleAddSubmit}
-              onCancel={() => setIsAddModalOpen(false)}
-              submitLabel="Add Product"
-            />
-          </div>
-        </ModalOverlay>
-      )}
 
-      {/* ── Edit Product Modal ──────────────────────────── */}
-      {isEditModalOpen && editingProduct && (
-        <ModalOverlay onClose={() => setIsEditModalOpen(false)}>
-          <div>
-            <div className="flex items-center justify-between border-b border-[var(--table-divider)] px-6 py-4">
-              <h2 className="text-lg font-semibold text-[var(--text-primary)]">
-                Edit Product
-              </h2>
-              <button
-                onClick={() => setIsEditModalOpen(false)}
-                className="rounded-lg p-1 text-[var(--text-tertiary)] transition-all hover:bg-[var(--hover-bg)] hover:text-[var(--text-primary)]"
-                aria-label="Close"
-              >
-                <X size={18} />
-              </button>
-            </div>
-            <ProductForm
-              product={editingProduct}
-              onSubmit={handleEditSubmit}
-              onCancel={() => {
-                setIsEditModalOpen(false);
-                setEditingProduct(null);
-              }}
-              submitLabel="Save Changes"
-            />
-          </div>
-        </ModalOverlay>
-      )}
-
-      {/* ── Delete Confirmation Dialog ──────────────────── */}
-      {confirmDelete && (
-        <ModalOverlay onClose={() => setConfirmDelete(null)}>
-          <div className="p-6">
-            <div className="text-center">
-              <Trash2
-                size={40}
-                className="mx-auto mb-4 text-red-400"
-              />
-              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2">
-                Delete Product?
-              </h3>
-              <p className="text-sm text-[var(--text-secondary)] mb-6">
-                Are you sure you want to delete{" "}
-                <strong className="text-[var(--text-primary)]">
-                  {confirmDelete.name}
-                </strong>
-                ? This action cannot be undone.
-              </p>
-              <div className="flex justify-center gap-3">
-                <button
-                  onClick={() => setConfirmDelete(null)}
-                  className="rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-2.5 text-sm font-medium text-[var(--text-secondary)] transition-all hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={confirmDeleteProduct}
-                  className="rounded-xl border border-red-400/50 bg-red-400/10 px-4 py-2.5 text-sm font-medium text-red-400 transition-all hover:bg-red-400/20"
-                >
-                  Delete
+            {/* Cart Footer */}
+            {cart.length > 0 && (
+              <div className="border-t border-[var(--border)] p-6">
+                <div className="mb-4 flex items-center justify-between text-sm">
+                  <span className="text-[var(--text-tertiary)]">Subtotal</span>
+                  <span className="font-bold text-[var(--text-primary)]">${cartTotal.toFixed(2)}</span>
+                </div>
+                <div className="mb-2 flex items-center justify-between text-sm">
+                  <span className="text-[var(--text-tertiary)]">Shipping</span>
+                  <span className="text-emerald-400">Free</span>
+                </div>
+                <div className="mb-4 flex items-center justify-between border-t border-[var(--border)] pt-4">
+                  <span className="text-base font-bold text-[var(--text-primary)]">Total</span>
+                  <span className="text-xl font-black text-violet-400">${cartTotal.toFixed(2)}</span>
+                </div>
+                <button className="w-full rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 py-3.5 text-sm font-bold text-white shadow-lg shadow-violet-500/25 transition-all hover:shadow-xl hover:shadow-violet-500/40">
+                  Checkout →
                 </button>
               </div>
-            </div>
+            )}
           </div>
-        </ModalOverlay>
+        </div>
       )}
     </div>
   );
