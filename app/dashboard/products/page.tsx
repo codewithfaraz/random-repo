@@ -374,29 +374,39 @@ export default function ProductsPage() {
         </div>
 
         {/* Active filters */}
-        {(activeCategory !== "All" || searchQuery) && (
-          <div className="mb-6 flex items-center gap-2">
-            <SlidersHorizontal size={14} className="text-[var(--text-tertiary)]" />
-            <span className="text-sm text-[var(--text-tertiary)]">
-              {activeCategory !== "All" && (
-                <span className="mr-1 inline-flex items-center gap-1 rounded-full bg-violet-500/10 px-2.5 py-0.5 text-xs font-medium text-violet-400">
-                  {activeCategory}
-                  <button onClick={() => setActiveCategory("All")} aria-label="Clear category">
-                    <X size={10} />
-                  </button>
-                </span>
-              )}
-              {searchQuery && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-2.5 py-0.5 text-xs font-medium text-blue-400">
-                  "{searchQuery}"
-                  <button onClick={() => setSearchQuery("")} aria-label="Clear search">
-                    <X size={10} />
-                  </button>
-                </span>
-              )}
-            </span>
-          </div>
-        )}
+{(activeCategory !== "All" || searchQuery || sortBy !== "featured") && (
+            <div className="mb-6 flex items-center gap-2">
+              <SlidersHorizontal size={14} className="text-[var(--text-tertiary)]" />
+              <span className="text-sm text-[var(--text-tertiary)]">
+                {activeCategory !== "All" && (
+                  <span className="mr-1 inline-flex items-center gap-1 rounded-full bg-violet-500/10 px-2.5 py-0.5 text-xs font-medium text-violet-400">
+                    {activeCategory}
+                    <button onClick={() => setActiveCategory("All")} aria-label="Clear category">
+                      <X size={10} />
+                    </button>
+                  </span>
+                )}
+                {searchQuery && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-2.5 py-0.5 text-xs font-medium text-blue-400">
+                    "{searchQuery}"
+                    <button onClick={() => setSearchQuery("")} aria-label="Clear search">
+                      <X size={10} />
+                    </button>
+                  </span>
+                )}
+                <button
+                  onClick={() => {
+                    setActiveCategory("All");
+                    setSearchQuery("");
+                    setSortBy("featured");
+                  }}
+                  className="ml-2 text-xs font-medium text-violet-400 hover:underline"
+                >
+                  Clear All ✕
+                </button>
+              </span>
+            </div>
+          )}
 
         {/* Product Grid */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
