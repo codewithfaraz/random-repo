@@ -11,6 +11,7 @@ import {
   ArrowUpDown,
   ChevronDown,
   Filter,
+  ShoppingBag,
 } from "lucide-react";
 
 // ─── Revenue Data ───────────────────────────────────────
@@ -80,7 +81,10 @@ export default function RevenuePage() {
     let result = [...data];
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
-      result = result.filter((r) => r.month?.toLowerCase().includes(q) || r.week?.toLowerCase().includes(q));
+      result = result.filter((r) => {
+        const label = "month" in r ? r.month : r.week;
+        return label.toLowerCase().includes(q);
+      });
     }
     if (rangeFilter !== "all") {
       const quarterMap: Record<string, number[]> = { Q1: [0, 1, 2], Q2: [3, 4, 5], Q3: [6, 7, 8], Q4: [9, 10, 11] };
@@ -215,7 +219,9 @@ export default function RevenuePage() {
                 <tr key={i} className="transition-colors hover:bg-white/[0.02]">
                   <td className="px-6 py-4">
                     <span className="text-sm font-medium text-[var(--text-primary)]">
-                      {period === "monthly" ? d.month : d.week}
+                      {period === "monthly"
+                        ? (d as (typeof monthlyRevenue)[0]).month
+                        : (d as (typeof weeklyRevenue)[0]).week}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right">

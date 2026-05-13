@@ -19,6 +19,8 @@ import {
   CreditCard,
   UserPlus,
   Trash2,
+  ShoppingBag,
+  Plus,
 } from "lucide-react";
 
 export default function SettingsPage() {

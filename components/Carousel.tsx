@@ -87,8 +87,8 @@ export function Carousel({
       className={`relative overflow-hidden ${className}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onFocusIn={handleMouseEnter}
-      onFocusOut={handleMouseLeave}
+      onFocus={handleMouseEnter}
+      onBlur={handleMouseLeave}
     >
       <div ref={emblaRef} className="flex">
         {children}

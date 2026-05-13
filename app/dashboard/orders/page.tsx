@@ -46,7 +46,7 @@ export default function OrdersPage() {
   const [statusFilter, setStatusFilter] = useState<string>("All");
   const [currentPage, setCurrentPage] = useState(1);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
-  const [sortField, setSortField] = useState<"id" | "customer" | "amount" | "date" | null>(null);
+  const [sortField, setSortField] = useState<"id" | "customer" | "product" | "amount" | "date" | null>(null);
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
 
   // Filtered & Sorted
@@ -75,7 +75,7 @@ export default function OrdersPage() {
   const totalPages = Math.ceil(filteredOrders.length / ITEMS_PER_PAGE);
   const paginatedOrders = filteredOrders.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
-  const toggleSort = (field: "id" | "customer" | "amount" | "date") => {
+  const toggleSort = (field: "id" | "customer" | "product" | "amount" | "date") => {
     if (sortField === field) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
     else {
       setSortField(field);
