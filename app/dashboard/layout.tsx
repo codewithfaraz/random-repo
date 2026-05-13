@@ -121,7 +121,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         {/* Sidebar footer */}
         <div className="absolute bottom-0 left-0 right-0 border-t border-[var(--border)] px-6 py-4">
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-xs font-bold text-white shadow-lg shadow-amber-500/20">
+            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-xs font-bold text-[var(--text-primary)] shadow-lg shadow-amber-500/20">
               A
             </div>
             <div>

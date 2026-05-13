@@ -158,9 +158,9 @@ export default function OrdersPage() {
                 const status = statusConfig[order.status];
                 const StatusIcon = status.icon;
                 return (
-                  <tr key={order.id} className="transition-colors hover:bg-white/[0.02]">
+                  <tr key={order.id} className="transition-colors hover:bg-[var(--hover-bg)]">
                     <td className="px-6 py-4">
-                      <span className="font-medium text-white">{order.id}</span>
+                      <span className="font-medium text-[var(--text-primary)]">{order.id}</span>
                     </td>
                     <td className="px-6 py-4">
                       <span className="text-sm text-[var(--text-secondary)]">{order.customer}</span>
@@ -169,7 +169,7 @@ export default function OrdersPage() {
                       <span className="text-sm text-[var(--text-tertiary)]">{order.product}</span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-sm font-semibold text-white">{order.amount}</span>
+                      <span className="text-sm font-semibold text-[var(--text-primary)]">{order.amount}</span>
                     </td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ${status.bg} ${status.color}`}>
@@ -189,8 +189,8 @@ export default function OrdersPage() {
                           <MoreVertical size={15} />
                         </button>
                         {openMenuId === order.id && (
-                          <div className="absolute right-0 top-full z-50 mt-1 w-40 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-1 shadow-2xl shadow-black/60">
-                            <button className="flex w-full items-center gap-2 rounded-lg px-4 py-2.5 text-sm text-white/70 hover:bg-white/10">
+<div className="absolute right-0 top-full z-50 mt-1 w-40 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-1 shadow-2xl shadow-black/60">
+                            <button className="flex w-full items-center gap-2 rounded-lg px-4 py-2.5 text-sm text-[var(--text-secondary)] transition-all hover:bg-[var(--hover-bg)] hover:text-[var(--text-primary)] focus:bg-[var(--hover-bg)] focus:outline-none">
                               ✏️ Edit
                             </button>
                             <button
@@ -239,7 +239,7 @@ export default function OrdersPage() {
                 onClick={() => setCurrentPage(p)}
                 className={`flex h-9 w-9 items-center justify-center rounded-lg border px-2 text-sm font-medium transition-all ${
                   currentPage === p
-                    ? "border-violet-500 bg-violet-500 text-white shadow-lg shadow-violet-500/25"
+                    ? "border-violet-500 bg-violet-500 text-[var(--text-primary)] shadow-lg shadow-violet-500/25"
                     : "border-[var(--border)] bg-[var(--hover-bg)] text-[var(--text-secondary)]"
                 }`}
               >

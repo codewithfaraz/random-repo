@@ -25,7 +25,7 @@ export function MetricCard({
   const changeColor = isUp ? "text-emerald-400" : "text-red-400";
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)]/[0.03] p-6 backdrop-blur-xl transition-all duration-300 hover:border-[var(--border)] hover:bg-[var(--hover-bg-strong)]">
+    <div className="glass-strong rounded-2xl border border-[var(--border)]/[0.5] p-6 backdrop-blur-xl transition-all duration-300 hover:border-violet-500/30 hover:shadow-xl hover:shadow-violet-500/5 animate-fade-in-up">
       {/* Glow effect */}
       <div
         className={`pointer-events-none absolute -top-20 -right-20 h-40 w-40 rounded-full bg-gradient-to-br ${gradient} opacity-10 blur-3xl`}

@@ -61,7 +61,7 @@ export function SalesChart({ timeRange }: SalesChartProps) {
   const growth = ((totalRevenue - prevRevenue) / prevRevenue) * 100;
 
   return (
-    <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)]/[0.03] p-6 backdrop-blur-xl">
+    <div className="glass-strong rounded-2xl border border-[var(--border)]/[0.5] p-6 backdrop-blur-xl animate-fade-in-up">
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div>
@@ -78,10 +78,8 @@ export function SalesChart({ timeRange }: SalesChartProps) {
           ) : (
             <TrendingDown size={14} className="text-red-400" />
           )}
-          <span
-            className={`text-xs font-semibold ${
-              growth >= 0 ? "text-emerald-400" : "text-red-400"
-            }`}
+<span
+            className={`text-xs font-semibold ${growth >= 0 ? "text-emerald-400" : "text-red-400"}`}
           >
             {growth >= 0 ? "+" : ""}
             {growth.toFixed(1)}% vs prev period

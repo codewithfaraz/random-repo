@@ -103,7 +103,7 @@ export function Carousel({
           <button
             onClick={scrollPrev}
             disabled={prevBtnDisabled}
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-white transition-all hover:bg-violet-500/50 disabled:opacity-30 disabled:cursor-not-allowed"
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-[var(--text-primary)] transition-all hover:bg-violet-500/50 disabled:opacity-30 disabled:cursor-not-allowed"
             aria-label="Previous"
           >
             <ChevronLeft size={20} />
@@ -111,7 +111,7 @@ export function Carousel({
           <button
             onClick={scrollNext}
             disabled={nextBtnDisabled}
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-white transition-all hover:bg-violet-500/50 disabled:opacity-30 disabled:cursor-not-allowed"
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-[var(--text-primary)] transition-all hover:bg-violet-500/50 disabled:opacity-30 disabled:cursor-not-allowed"
             aria-label="Next"
           >
             <ChevronRight size={20} />
@@ -127,7 +127,7 @@ export function Carousel({
               key={index}
               onClick={() => scrollTo(index)}
               className={`h-2 w-2 rounded-full transition-all duration-300 ${
-                index === selectedIndex ? "bg-violet-400 w-6" : "bg-white/30 hover:bg-white/50"
+                index === selectedIndex ? "bg-violet-400 w-6" : "bg-[var(--text-tertiary)] hover:bg-[var(--text-primary)]"
               }`}
               aria-label={`Go to slide ${index + 1}`}
             />

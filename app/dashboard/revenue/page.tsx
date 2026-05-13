@@ -115,7 +115,7 @@ export default function RevenuePage() {
               onClick={() => setPeriod(p as any)}
               className={`rounded-full px-4 py-1.5 text-xs font-semibold uppercase transition-all ${
                 period === p
-                  ? "bg-violet-500 text-white shadow-lg shadow-violet-500/25"
+                  ? "bg-violet-500 text-[var(--text-primary)] shadow-lg shadow-violet-500/25"
                   : "bg-[var(--hover-bg)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
               }`}
             >
@@ -216,7 +216,7 @@ export default function RevenuePage() {
               const isPositive = profit >= 0;
               const growth = (d as any).growth;
               return (
-                <tr key={i} className="transition-colors hover:bg-white/[0.02]">
+                <tr key={i} className="transition-colors hover:bg-[var(--hover-bg)]">
                   <td className="px-6 py-4">
                     <span className="text-sm font-medium text-[var(--text-primary)]">
                       {period === "monthly"

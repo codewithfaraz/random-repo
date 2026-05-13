@@ -134,7 +134,7 @@ function ActionMenu({
           onEdit(orderId);
           onClose();
         }}
-        className="flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-sm text-white/70 transition-all hover:bg-white/10 hover:text-white focus:bg-white/10 focus:outline-none"
+        className="flex w-full items-center gap-3 rounded-lg px-4 py-2.5 text-sm text-[var(--text-secondary)] transition-all hover:bg-[var(--hover-bg)] hover:text-[var(--text-primary)] focus:bg-[var(--hover-bg)] focus:outline-none"
         role="menuitem"
       >
         <span className="text-blue-400">✏️</span>
@@ -155,7 +155,7 @@ function ActionMenu({
   );
 }
 
-/* ── Component ─────────────────────────────────────── */
+/* ── Component ─────────────────────────────── */
 export function RecentOrders() {
   const [orders, setOrders] = useState<Order[]>(initialOrders);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
@@ -200,14 +200,14 @@ export function RecentOrders() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-bold tracking-tight text-white">
+          <h2 className="text-lg font-bold tracking-tight text-[var(--text-primary)]">
             Recent Orders
           </h2>
-          <p className="text-sm text-white/40">
+          <p className="text-sm text-[var(--text-tertiary)]">
             Latest transactions from your store
           </p>
         </div>
-        <button className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white/60 transition-all hover:bg-white/10 hover:text-white">
+        <button className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-2 text-sm font-medium text-[var(--text-secondary)] transition-all hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]">
           Export <ArrowUpDown size={14} />
         </button>
       </div>
@@ -217,15 +217,15 @@ export function RecentOrders() {
         <div className="relative flex-1">
           <Search
             size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]"
           />
           <input
             type="text"
             placeholder="Search orders..."
-            className="w-full rounded-xl border border-white/10 bg-white/5 py-2.5 pl-10 pr-4 text-sm text-white/80 placeholder:text-white/25 outline-none transition-all focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
+            className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] py-2.5 pl-10 pr-4 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
           />
         </div>
-        <select className="rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white/60 outline-none transition-all focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20">
+        <select className="rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-3 py-2.5 text-sm text-[var(--text-secondary)] outline-none transition-all focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20">
           <option>All Status</option>
           <option>Completed</option>
           <option>Processing</option>
@@ -235,33 +235,33 @@ export function RecentOrders() {
       </div>
 
       {/* Table — overflow-visible so dropdowns aren't clipped */}
-      <div className="rounded-2xl border border-white/10">
+      <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)]/[0.03] overflow-hidden">
         <div className="max-h-[500px] overflow-y-auto">
           <table className="w-full">
-            <thead className="sticky top-0 z-10 bg-[#0a0a0f]">
-              <tr className="border-b border-white/10">
-                <th className="px-6 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-white/40">
+            <thead className="sticky top-0 z-10 bg-[var(--surface)]/95 backdrop-blur-xl">
+              <tr className="border-b border-[var(--border)]">
+                <th className="px-6 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">
                   Order ID
                 </th>
-                <th className="px-6 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-white/40">
+                <th className="px-6 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">
                   Customer
                 </th>
-                <th className="px-6 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-white/40">
+                <th className="px-6 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">
                   Product
                 </th>
-                <th className="px-6 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-white/40">
+                <th className="px-6 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">
                   Amount
                 </th>
-                <th className="px-6 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-white/40">
+                <th className="px-6 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-white/40">
+                <th className="px-6 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">
                   Date
                 </th>
                 <th className="px-6 py-3"></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-[var(--border)]/50">
               {orders.map((order) => {
                 const status = statusConfig[order.status];
                 const StatusIcon = status.icon;
@@ -269,25 +269,25 @@ export function RecentOrders() {
                 return (
                   <tr
                     key={order.id}
-                    className="relative transition-colors hover:bg-white/[0.03]"
+                    className="relative transition-colors duration-150 hover:bg-[var(--hover-bg)]"
                   >
                     <td className="px-6 py-4">
-                      <span className="font-medium text-white">
+                      <span className="font-medium text-[var(--text-primary)]">
                         {order.id}
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-sm text-white/70">
+                      <span className="text-sm text-[var(--text-secondary)]">
                         {order.customer}
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-sm text-white/60">
+                      <span className="text-sm text-[var(--text-secondary)]">
                         {order.product}
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-sm font-semibold text-white">
+                      <span className="text-sm font-semibold text-[var(--text-primary)]">
                         {order.amount}
                       </span>
                     </td>
@@ -300,7 +300,7 @@ export function RecentOrders() {
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-sm text-white/50">
+                      <span className="text-sm text-[var(--text-tertiary)]">
                         {order.date}
                       </span>
                     </td>
@@ -313,7 +313,7 @@ export function RecentOrders() {
                               isOpen ? null : order.id
                             );
                           }}
-                          className="rounded p-1.5 text-white/30 transition-all hover:bg-white/10 hover:text-white"
+                          className="rounded p-1.5 text-[var(--text-tertiary)] transition-all hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]"
                         >
                           <MoreVertical size={16} />
                         </button>
@@ -345,7 +345,7 @@ export function RecentOrders() {
               {orders.length === 0 && (
                 <tr>
                   <td colSpan={7}>
-                    <div className="flex flex-col items-center justify-center py-16 text-white/40">
+                    <div className="flex flex-col items-center justify-center py-16 text-[var(--text-tertiary)]">
                       <ShoppingBag
                         size={48}
                         className="mb-4 opacity-50"
@@ -362,7 +362,7 @@ export function RecentOrders() {
 
       {/* Pagination */}
       <div className="flex items-center justify-between">
-        <p className="text-sm text-white/40">
+        <p className="text-sm text-[var(--text-tertiary)]">
           Showing{" "}
           {orders.length > 0
             ? "1-" + Math.min(7, orders.length)
@@ -370,25 +370,25 @@ export function RecentOrders() {
           of {orders.length} orders
         </p>
         <div className="flex gap-2">
-          <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/50 transition-all hover:bg-white/10 hover:text-white">
+          <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--hover-bg)] text-[var(--text-tertiary)] transition-all hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]">
             <ChevronLeft size={16} />
           </button>
-          <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-violet-500 bg-violet-500 text-white">
+          <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-violet-500 bg-violet-500 text-[var(--text-primary)]">
             1
           </button>
-          <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/50 transition-all hover:bg-white/10 hover:text-white">
+          <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--hover-bg)] text-[var(--text-tertiary)] transition-all hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]">
             2
           </button>
-          <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/50 transition-all hover:bg-white/10 hover:text-white">
+          <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--hover-bg)] text-[var(--text-tertiary)] transition-all hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]">
             3
           </button>
-          <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/50 transition-all hover:bg-white/10 hover:text-white">
+          <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--hover-bg)] text-[var(--text-tertiary)] transition-all hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]">
             ...
           </button>
-          <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/50 transition-all hover:bg-white/10 hover:text-white">
+          <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--hover-bg)] text-[var(--text-tertiary)] transition-all hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]">
             185
           </button>
-          <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/50 transition-all hover:bg-white/10 hover:text-white">
+          <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--hover-bg)] text-[var(--text-tertiary)] transition-all hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]">
             <ChevronRight size={16} />
           </button>
         </div>

@@ -40,7 +40,7 @@ export default function DashboardPage() {
               onClick={() => setTimeRange(range)}
               className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
                 timeRange === range
-                  ? "bg-violet-500 text-white shadow-lg shadow-violet-500/25"
+                  ? "bg-violet-500 text-[var(--text-primary)] shadow-lg shadow-violet-500/25"
                   : "bg-[var(--hover-bg)] text-[var(--text-secondary)] hover:bg-[var(--hover-bg-strong)] hover:text-[var(--text-primary)]"
               }`}
             >

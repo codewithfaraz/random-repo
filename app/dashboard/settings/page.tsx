@@ -160,7 +160,7 @@ export default function SettingsPage() {
                 </button>
                 <button
                   onClick={handleSaveProfile}
-                  className="rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-violet-500/25 transition-all duration-200 hover:shadow-xl hover:shadow-violet-500/40 flex items-center gap-2"
+                  className="rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 px-6 py-2.5 text-sm font-bold text-[var(--text-primary)] shadow-lg shadow-violet-500/25 transition-all duration-200 hover:shadow-xl hover:shadow-violet-500/40 flex items-center gap-2"
                 >
                   <Save size={15} />
                   {saveSuccess ? "✓ Saved!" : "Save Changes"}
@@ -185,7 +185,7 @@ export default function SettingsPage() {
                       <input
                         type={showPassword ? "text" : "password"}
                         placeholder="••••••••"
-                        className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all duration-200 focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20 pr-10"
+                        className="w-full rounded-xl border border-[var(--border)] bg-[var(--hover-bg)] px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] outline-none transition-all duration-200 focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/20"
                       />
                       <button
                         type="button"
@@ -216,7 +216,7 @@ export default function SettingsPage() {
                 <div className="mt-6 flex justify-end">
                   <button
                     onClick={handlePasswordChange}
-                    className="rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-violet-500/25 transition-all duration-200 hover:shadow-xl hover:shadow-violet-500/40 flex items-center gap-2"
+                    className="rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 px-6 py-2.5 text-sm font-bold text-[var(--text-primary)] shadow-lg shadow-violet-500/25 transition-all duration-200 hover:shadow-xl hover:shadow-violet-500/40 flex items-center gap-2"
                   >
                     <Lock size={15} />
                     Update Password
@@ -334,7 +334,7 @@ export default function SettingsPage() {
                   { title: "Product Low Stock", desc: "USB-C Hub is running low (3 remaining)", time: "15 min ago", icon: <Bell size={16} /> },
                   { title: "Monthly Report Ready", desc: "April sales report is available for download", time: "1 hr ago", icon: <Mail size={16} /> },
                 ].map((n, i) => (
-                  <div key={i} className="flex items-start gap-3 rounded-lg p-3 transition-colors duration-200 hover:bg-white/[0.02]">
+                  <div key={i} className="flex items-start gap-3 rounded-lg p-3 transition-colors duration-200 hover:bg-[var(--hover-bg)]">
                     <span className="mt-0.5 shrink-0 text-[var(--text-tertiary)]">{n.icon}</span>
                     <div>
                       <p className="text-sm text-[var(--text-primary)]">{n.title}</p>
@@ -399,7 +399,7 @@ export default function SettingsPage() {
                     { month: "February 2025", amount: "$29.00", status: "Paid" },
                     { month: "January 2025", amount: "$29.00", status: "Paid" },
                   ].map((b, i) => (
-                    <div key={i} className="flex items-center justify-between rounded-lg p-3 transition-colors duration-200 hover:bg-white/[0.02]">
+                    <div key={i} className="flex items-center justify-between rounded-lg p-3 transition-colors duration-200 hover:bg-[var(--hover-bg)]">
                       <div>
                         <p className="text-sm font-medium text-[var(--text-primary)]">{b.month}</p>
                         <p className="text-xs text-[var(--text-tertiary)]">Pro Plan</p>
@@ -422,7 +422,7 @@ export default function SettingsPage() {
                   <input type="text" placeholder="Type account name to confirm" className="flex-1 rounded-xl border border-red-500/30 bg-[var(--hover-bg)] px-4 py-2.5 text-sm text-red-400 placeholder:text-red-400/40 outline-none focus:ring-1 focus:ring-red-500/20 transition-all duration-200" />
                   <button
                     onClick={handleDeleteAccount}
-                    className="rounded-xl bg-gradient-to-r from-red-500 to-rose-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-red-500/25 hover:shadow-xl hover:shadow-red-500/40 transition-all duration-200 flex items-center gap-2"
+                    className="rounded-xl bg-gradient-to-r from-red-500 to-rose-600 px-6 py-2.5 text-sm font-bold text-[var(--text-primary)] shadow-lg shadow-red-500/25 hover:shadow-xl hover:shadow-red-500/40 transition-all duration-200 flex items-center gap-2"
                   >
                     <Trash2 size={15} />
                     Delete Account

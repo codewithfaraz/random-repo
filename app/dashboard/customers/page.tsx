@@ -139,10 +139,10 @@ export default function CustomersPage() {
               const initials = c.name.split(" ").map((n) => n[0]).join("");
               const statusColors = { active: "bg-emerald-500", inactive: "bg-gray-500", away: "bg-amber-500" };
               return (
-                <tr key={c.id} className="transition-colors hover:bg-white/[0.02]">
+                <tr key={c.id} className="transition-colors hover:bg-[var(--hover-bg)]">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className={`flex h-8 w-8 items-center justify-center rounded-full ${statusColors[c.status as keyof typeof statusColors]} text-[10px] font-bold text-white shrink-0`}>
+                      <div className={`flex h-8 w-8 items-center justify-center rounded-full ${statusColors[c.status as keyof typeof statusColors]} text-[10px] font-bold text-[var(--text-primary)] shrink-0`}>
                         {initials}
                       </div>
                       <span className="text-sm font-medium text-[var(--text-primary)]">{c.name}</span>

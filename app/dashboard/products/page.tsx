@@ -63,14 +63,14 @@ function ProductCard({ product, onAddToCart }: { product: typeof allProducts[0];
           <div className="absolute inset-0 flex items-center justify-center gap-3 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity">
             <button
               onClick={() => setIsWishlisted(!isWishlisted)}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/40 transition-all"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-[var(--text-primary)] hover:bg-white/40 transition-all"
               aria-label="Add to wishlist"
             >
               <Heart size={18} className={isWishlisted ? "fill-red-500 text-red-500" : ""} />
             </button>
             <button
               onClick={() => onAddToCart(product)}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-violet-500/80 backdrop-blur-sm text-white hover:bg-violet-500 transition-all"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-violet-500/80 backdrop-blur-sm text-[var(--text-primary)] hover:bg-violet-500 transition-all"
               aria-label="Add to cart"
             >
               <ShoppingBag size={18} />
@@ -80,12 +80,12 @@ function ProductCard({ product, onAddToCart }: { product: typeof allProducts[0];
 
         {/* Badges */}
         {!product.inStock && (
-          <span className="absolute top-3 left-3 rounded-full bg-red-500/90 px-2.5 py-1 text-[10px] font-bold text-white">
+          <span className="absolute top-3 left-3 rounded-full bg-red-500/90 px-2.5 py-1 text-[10px] font-bold text-[var(--text-primary)]">
             Sold Out
           </span>
         )}
         {product.rating >= 4.8 && (
-          <span className="absolute top-3 right-3 rounded-full bg-amber-400/90 px-2.5 py-1 text-[10px] font-bold text-white">
+          <span className="absolute top-3 right-3 rounded-full bg-amber-400/90 px-2.5 py-1 text-[10px] font-bold text-[var(--text-primary)]">
             ⭐ Best Seller
           </span>
         )}
@@ -128,7 +128,7 @@ function ProductCard({ product, onAddToCart }: { product: typeof allProducts[0];
           disabled={!product.inStock}
           className={`mt-3 w-full rounded-xl py-2.5 text-sm font-semibold transition-all ${
             product.inStock
-              ? "bg-violet-500 text-white hover:bg-violet-600 shadow-lg shadow-violet-500/25"
+              ? "bg-violet-500 text-[var(--text-primary)] hover:bg-violet-600 shadow-lg shadow-violet-500/25"
               : "bg-gray-700 text-gray-400 cursor-not-allowed"
           }`}
         >
@@ -291,7 +291,7 @@ export default function ProductsPage() {
                 <div className="flex flex-col overflow-hidden rounded-2xl border border-red-500/20 bg-[var(--surface)] transition-all duration-300 hover:shadow-2xl hover:shadow-red-500/5">
                   <div className="relative aspect-square flex items-center justify-center bg-red-500/5">
                     <span className="text-7xl">{item.image}</span>
-                    <span className="absolute top-3 right-3 rounded-full bg-gradient-to-br from-red-500 to-rose-600 px-2.5 py-1 text-[10px] font-black text-white">
+                    <span className="absolute top-3 right-3 rounded-full bg-gradient-to-br from-red-500 to-rose-600 px-2.5 py-1 text-[10px] font-black text-[var(--text-primary)]">
                       {item.discount}
                     </span>
                   </div>
@@ -302,7 +302,7 @@ export default function ProductsPage() {
                       <span className="text-sm text-[var(--text-tertiary)] line-through">${item.original.toFixed(2)}</span>
                     </div>
                     <button
-                      className="mt-3 w-full rounded-xl bg-gradient-to-r from-red-500 to-rose-600 py-2.5 text-sm font-bold text-white shadow-lg shadow-red-500/25 transition-all hover:shadow-xl hover:shadow-red-500/40"
+                      className="mt-3 w-full rounded-xl bg-gradient-to-r from-red-500 to-rose-600 py-2.5 text-sm font-bold text-[var(--text-primary)] shadow-lg shadow-red-500/25 transition-all hover:shadow-xl hover:shadow-red-500/40"
                       onClick={() => alert(`Added ${item.name} to cart!`)}
                     >
                       Grab Deal!
@@ -338,7 +338,7 @@ export default function ProductsPage() {
                 onClick={() => setActiveCategory(cat)}
                 className={`rounded-full border px-4 py-1.5 text-xs font-semibold transition-all ${
                   activeCategory === cat
-                    ? "border-violet-500 bg-violet-500 text-white shadow-lg shadow-violet-500/25"
+                    ? "border-violet-500 bg-violet-500 text-[var(--text-primary)] shadow-lg shadow-violet-500/25"
                     : "border-[var(--border)] bg-[var(--hover-bg)] text-[var(--text-secondary)] hover:border-violet-500/50 hover:text-[var(--text-primary)]"
                 }`}
               >
@@ -417,7 +417,7 @@ export default function ProductsPage() {
 
         {/* Empty state */}
         {filteredProducts.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-20 text-white/40">
+          <div className="flex flex-col items-center justify-center py-20 text-[var(--text-tertiary)]">
             <ShoppingBag size={64} className="mb-4 opacity-50" />
             <p className="text-lg font-medium">No products found</p>
             <p className="text-sm">Try adjusting your filters or search query</p>
@@ -517,7 +517,7 @@ export default function ProductsPage() {
                   <span className="text-base font-bold text-[var(--text-primary)]">Total</span>
                   <span className="text-xl font-black text-violet-400">${cartTotal.toFixed(2)}</span>
                 </div>
-                <button className="w-full rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 py-3.5 text-sm font-bold text-white shadow-lg shadow-violet-500/25 transition-all hover:shadow-xl hover:shadow-violet-500/40">
+                <button className="w-full rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 py-3.5 text-sm font-bold text-[var(--text-primary)] shadow-lg shadow-violet-500/25 transition-all hover:shadow-xl hover:shadow-violet-500/40">
                   Checkout →
                 </button>
               </div>
